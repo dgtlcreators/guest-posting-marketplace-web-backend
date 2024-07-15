@@ -19,20 +19,17 @@ const superAdminRoute=require("./routes/superAdminRoute")
 const app = express();
 
 connectDB();
-
-
-/*const corsOptions = {
-  origin: 'http://localhost:3000', 
-  credentials: true, 
-};
-*/
-const url='https://guest-posting-marketplace-web.netlify.app' || 'http://localhost:3000'
+const url='https://guest-posting-marketplace-web.netlify.app' ||"http://localhost:3000"
 const corsOptions = {
   origin: url,
   credentials: true, // if using cookies or sessions
 };
 app.use(cors(corsOptions));
-//app.use(cors())
+
+/*app.use(cors({
+  origin: 'http://localhost:3000', // Allow requests from frontend origin
+  credentials: true, // Allow sending cookies
+}));*/
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //app.use(bodyParser.urlencoded({ extended: true }));
