@@ -3,8 +3,9 @@ const User = require('../models/userModel');
 const bcrypt=require("bcryptjs")
 
 const connectDB = async () => {
+    const url=process.env.MONGO_URI || "mongodb+srv://guest-posting-marketplace-web:guest-posting-marketplace-web@cluster0.kjvasef.mongodb.net/guest-posting-marketplace-web?retryWrites=true&w=majority&appName=Cluster0"
     try {
-        await mongoose.connect(process.env.MONGO_URI, {
+        await mongoose.connect(url, {
         
             dbName:"guest-posting-marketplace-web"
         });
