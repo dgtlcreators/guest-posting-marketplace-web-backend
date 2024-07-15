@@ -25,9 +25,14 @@ const corsOptions = {
   credentials: true, // if using cookies or sessions
 };
 app.use(cors(corsOptions));*/
-app.use(cors({
+/*app.use(cors({
   origin: 'https://guest-posting-marketplace-web.netlify.app/login',
   credentials: true // If you're sending cookies or using sessions
+}));*/
+
+app.use(cors({
+  origin: 'https://guest-posting-marketplace-web.netlify.app',
+  credentials: true  // If you're using cookies or sessions
 }));
 
 /*app.use(cors({
