@@ -20,10 +20,11 @@ const app = express();
 
 connectDB();
 
-app.use(cors({
+/*app.use(cors({
   origin: 'http://localhost:3000', // Allow requests from frontend origin
   credentials: true, // Allow sending cookies
-}));
+}));*/
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //app.use(bodyParser.urlencoded({ extended: true }));
