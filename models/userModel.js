@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["Admin", "User", "Super Admin"],
     },
+   /* isBuyed: {
+      type: Boolean,
+      default: false, // Assuming default is false
+    },
+  },*/
    
   },
   { timestamps: true }

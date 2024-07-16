@@ -2,6 +2,7 @@ const User=require("../models/userModel.js");
 const bcryptjs=require("bcryptjs");
 const jwt=require("jsonwebtoken");
 
+
 // export const signupUser = async(req,res) => {
 //     try {
 //         const {name, email, password,role} = await req.body;
@@ -105,3 +106,29 @@ module.exports.loginUser = async (req, res) => {
     });
   }
 };
+
+module.exports.markUserAsBuyed=async (req, res) =>{
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    user.isBuyed = true; // Assuming you have this field in your UserModel schema
+    await user.save();
+    res.json({
+      message: "User marked as buyed successfully",
+      success: true,
+      user: user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Server error",
+      success: false,
+      error: error,
+    });
+  }
+}
+
+

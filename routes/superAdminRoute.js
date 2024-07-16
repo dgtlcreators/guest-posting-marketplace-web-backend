@@ -8,6 +8,10 @@ const {
   updateOneAdminData,
   deleteOneAdminData,
   getFilteredAdminData,
+  addContactSpecificId,
+  getAllContactData,
+  getContactsByPublisherId,
+ 
 } =require("../controllers/superAdminController.js");
 
 
@@ -18,5 +22,10 @@ router.get("/getOneAdminData/:id", getOneAdminData);
 router.post("/getFilteredAdminData", getFilteredAdminData);
 router.put("/updateOneAdminData/:id", updateOneAdminData);
 router.delete("/deleteOneAdminData/:id", deleteOneAdminData);
+
+
+router.post("/addContact",addContactSpecificId)
+router.get("/getContact",getAllContactData)
+router.get("/getContactsByPublisher/:publisherId", getContactsByPublisherId);
 
 module.exports= router;

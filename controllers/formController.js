@@ -15,6 +15,11 @@ module.exports.submitForm = async (req, res) => {
 module.exports.getData = async (req, res) => {
   try {
     const response = await AdminData.find({});
+    response.forEach(doc => {
+      if (doc.isBuyed === undefined) {
+        doc.isBuyed = false; // Set a default value if `isBuyed` is not present
+      }
+    });
     res
       .status(200)
       .json({ message: "Form data fetched successfully", data: response });
@@ -35,6 +40,7 @@ module.exports.getRequest = async (req, res) => {
       price,
       monthlyTraffic,
       mozSpamScore,
+      isBuyed
     } = req.body;
 
     // Construct the query object
@@ -48,6 +54,8 @@ module.exports.getRequest = async (req, res) => {
     if (price) query.price = { $gte: Number(price) };
     if (monthlyTraffic) query.monthlyTraffic = monthlyTraffic;
     if (mozSpamScore) query.mozSpamScore = mozSpamScore;
+    if (isBuyed) query.isBuyed = isBuyed;
+    
     // if (toDA) query.toDA = { $lte: Number(toDA) };
     // if (toDR) query.toDR = { $lte: Number(toDR) };
     // if (toPrice) query.toPrice = { $lte: Number(toPrice) };
