@@ -28,15 +28,15 @@ const corsOptions = {
 app.use(cors(corsOptions));*/
 
 
-/*app.use(cors({
+app.use(cors({
   origin: 'https://guest-posting-marketplace-web.netlify.app',
   credentials: true  
-}));*/
+}));
 
-app.use(cors({
+/*app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true, 
-}));
+}));*/
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //app.use(bodyParser.urlencoded({ extended: true }));
