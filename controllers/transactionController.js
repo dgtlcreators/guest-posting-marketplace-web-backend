@@ -1,4 +1,4 @@
-const Transaction = require('../models/Transaction.js');
+const Transaction = require('../models/transaction.js');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 module.exports.newTransaction  =async (req, res) => {
