@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+//import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
 const formDataSchema = new mongoose.Schema({
   mozDA: { type: Number, min: 1 },
@@ -12,6 +13,7 @@ const formDataSchema = new mongoose.Schema({
   DAto: { type: Number, min: 1, max: 100 },
   DRto: { type: Number, min: 1, max: 100 },
   priceTo: { type: Number, min: 1, max: 100000 },
+
     // url: { type: String },
   // serviceType: { type: String },
   // siteWorkedWith: { type: String },
@@ -22,4 +24,5 @@ const formDataSchema = new mongoose.Schema({
 
 const formData = mongoose.model("FormData", formDataSchema);
 
-export default formData;
+//export default formData;
+module.exports = formData;

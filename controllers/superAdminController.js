@@ -1,4 +1,5 @@
 const AdminData=require("../models/adminModel.js");
+const Contact = require("../models/contact.js");
 
 module.exports.getAllAdminData = async (req, res) => {
   try {
@@ -130,5 +131,58 @@ module.exports.deleteOneAdminData = async (req, res) => {
     res.status(200).json({ msg: "Admin deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: error });
+  }
+};
+
+
+module.exports.addContactSpecificId=async (req, res) => {
+  try {
+    const { name, email, message, publisherId } = req.body;
+
+    // Create new contact form submission
+    const newContact = new Contact({
+      name,
+      email,
+      message,
+      publisherId,
+    });
+
+    // Save to database
+    await newContact.save();
+
+    res.status(201).json({ message: "Contact form submitted successfully" });
+  } catch (error) {
+    console.error("Error submitting contact form:", error);
+    res.status(500).json({ error: "Error submitting contact form" });
+  }
+};
+
+
+module.exports.getAllContactData = async (req, res) => {
+  try {
+    const contactData = await Contact.find();
+    if (!contactData) {
+      return res
+        .status(404)
+        .json({ msg: "Contact data not found from super admin" });
+    }
+    res.status(200).json(contactData);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+};
+
+// Add this function to get contacts by publisherId
+module.exports.getContactsByPublisherId = async (req, res) => {
+  try {
+    const publisherId = req.params.publisherId;
+    const contactData = await Contact.find({ publisherId });
+    if (!contactData.length) {
+      return res.status(404).json({ msg: "No contact data found for this publisher" });
+    }
+    res.status(200).json(contactData);
+  } catch (error) {
+    console.error("Error fetching contact data:", error);
+    res.status(500).json({ error: "Error fetching contact data" });
   }
 };

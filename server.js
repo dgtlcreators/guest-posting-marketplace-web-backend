@@ -8,7 +8,8 @@ console.log(process.env.STRIPE_SECRET_KEY)
 const userRoute=require("./routes/userRoute")
 const formRoute=require("./routes/formRoute")
 const adminRoute=require("./routes/adminRoute")
-const superAdminRoute=require("./routes/superAdminRoute")
+const superAdminRoute=require("./routes/superAdminRoute");
+const transactionRoute = require('./routes/TransactionRoute');
 
 
 
@@ -25,27 +26,24 @@ const corsOptions = {
   credentials: true, // if using cookies or sessions
 };
 app.use(cors(corsOptions));*/
+
+
 /*app.use(cors({
-  origin: 'https://guest-posting-marketplace-web.netlify.app/login',
-  credentials: true // If you're sending cookies or using sessions
+  origin: 'https://guest-posting-marketplace-web.netlify.app',
+  credentials: true  // If you're using cookies or sessions
 }));*/
 
 app.use(cors({
-  origin: 'https://guest-posting-marketplace-web.netlify.app',
-  credentials: true  // If you're using cookies or sessions
-}));
-
-/*app.use(cors({
   origin: 'http://localhost:3000', // Allow requests from frontend origin
   credentials: true, // Allow sending cookies
-}));*/
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //app.use(bodyParser.urlencoded({ extended: true }));
 
 
 
-app.get('/complete', async (req, res) => {
+/*app.get('/complete', async (req, res) => {
   const result = Promise.all([
       stripe.checkout.sessions.retrieve(req.query.session_id, { expand: ['payment_intent.payment_method'] }),
       stripe.checkout.sessions.listLineItems(req.query.session_id)
@@ -54,19 +52,64 @@ app.get('/complete', async (req, res) => {
   console.log(JSON.stringify(await result))
 
   res.send('Your payment was successful')
-})
+})*/
+app.get('/complete', async (req, res) => {
+  try {
+    const { session_id } = req.query;
+
+    // Retrieve session details from Stripe
+    const session = await stripe.checkout.sessions.retrieve(session_id);
+
+    // Assuming you have a userId stored in the session metadata
+    const userId = session.metadata.userId;
+
+    // Update MongoDB entry to mark as bought
+    await formData.findByIdAndUpdate(userId, { isBuyied: true });
+
+    // Redirect to /form or any appropriate route
+    res.redirect('/form');
+  } catch (error) {
+    console.error('Error completing payment:', error);
+    // Handle error appropriately
+    res.redirect('/cancel'); // Redirect to cancel page or handle error
+  }
+});
+
 
 app.get('/cancel', (req, res) => {
   res.redirect('/')
 })
 
 
- app.post('/create-payment-intent', async (req, res) => {
-  const { amount } = req.body;
+const User = require('./models/userModel');
+
+
+/*app.post('users/:id/buyed', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    console.log(req.params.id)
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    user.isBuyed = true;
+    await user.save();
+    res.json(user);
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+*/
+
+
+
+
+app.post('/create-payment-intent', async (req, res) => {
+  const { price } = req.body;
 
   try {
     const paymentIntent = await stripe.paymentIntents.create({
-      amount,
+      amount: price * 100,
       currency: 'usd',
     });
 
@@ -74,6 +117,7 @@ app.get('/cancel', (req, res) => {
       clientSecret: paymentIntent.client_secret,
     });
   } catch (error) {
+    console.log(error);
     res.status(400).send({
       error: {
         message: error.message,
@@ -84,11 +128,14 @@ app.get('/cancel', (req, res) => {
 
 
 
+
+
 app.use("/user", userRoute);
 app.use("/form", formRoute);
 // app.use("/form", verifyUser, formRoute);
 app.use("/admin",adminRoute);
 app.use("/superAdmin", superAdminRoute);
+app.use("/transaction",transactionRoute);
 
 app.get("/", (req, res) => {
     res.send("Hello from backend Cheers!!");
