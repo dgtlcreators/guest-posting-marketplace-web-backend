@@ -4,14 +4,14 @@ const {addInstagraminfluencer,getAllInstagraminfluencer,getInstagraminfluencerBy
 const upload = require("../multer/multerConfig")
 
 router.post("/addInstagraminfluencer", upload.fields([
-    { name: 'profilePicture', maxCount: 0 },
-    { name: 'mediaKit', maxCount: 0 }
+    { name: 'profilePicture', maxCount: 1 },
+    { name: 'mediaKit', maxCount: 1 }
   ]),addInstagraminfluencer)
 router.get("/getAllInstagraminfluencer",getAllInstagraminfluencer)
 router.get("/getInstagraminfluencerById/:id",getInstagraminfluencerById)
 router.put("/updateInstagraminfluencer/:id", upload.fields([
-    { name: 'profilePicture', maxCount: 0 },
-    { name: 'mediaKit', maxCount: 0 }
+    { name: 'profilePicture', maxCount: 1 },
+    { name: 'mediaKit', maxCount: 1 }
   ]),updateInstagraminfluencer)
 router.delete("/deleteInstagraminfluencer/:id",deleteInstagraminfluencer)
 
