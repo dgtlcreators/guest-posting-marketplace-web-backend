@@ -1,14 +1,20 @@
 const mongoose = require('mongoose');
 const User = require('../models/userModel');
 const bcrypt=require("bcryptjs")
+const Grid = require('gridfs-stream');
+
+let gfs;
 
 const connectDB = async () => {
     const url=process.env.MONGO_URI || "mongodb+srv://guest-posting-marketplace-web:guest-posting-marketplace-web@cluster0.kjvasef.mongodb.net/guest-posting-marketplace-web?retryWrites=true&w=majority&appName=Cluster0"
     try {
-        await mongoose.connect(url, {
+        const conn =  await mongoose.connect(url, {
         
             dbName:"guest-posting-marketplace-web"
         });
+
+        gfs = Grid(conn.connection.db, mongoose.mongo);
+        gfs.collection('uploads');
         console.log('MongoDB connected');
 
         const superAdmin = await User.findOne({ role: 'Super Admin' });

@@ -13,6 +13,7 @@ const formDataSchema = new mongoose.Schema({
   DAto: { type: Number, min: 1, max: 100 },
   DRto: { type: Number, min: 1, max: 100 },
   priceTo: { type: Number, min: 1, max: 100000 },
+  userId:{ type: mongoose.Schema.Types.ObjectId },
 
     // url: { type: String },
   // serviceType: { type: String },
@@ -20,7 +21,7 @@ const formDataSchema = new mongoose.Schema({
   // publisherRole: { type: String },
   // maxLinkAllow: { type: String },
   // markedAsSponsored: { type: String },
-});
+},{ timestamps: true });
 
 const formData = mongoose.model("FormData", formDataSchema);
 

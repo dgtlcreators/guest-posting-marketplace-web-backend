@@ -2,6 +2,7 @@ const express = require('express');
 const connectDB = require('./config/db');
 const cors = require('cors');
 require('dotenv').config();
+const path = require('path');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 console.log(process.env.STRIPE_SECRET_KEY)
 
@@ -10,23 +11,12 @@ const formRoute=require("./routes/formRoute")
 const adminRoute=require("./routes/adminRoute")
 const superAdminRoute=require("./routes/superAdminRoute");
 const transactionRoute = require('./routes/transactionRoute');
-
-
-
-
-
-
+const instagramInfluencerRoute = require('./routes/instagramInfluencerRoute');
+const fileRoutes = require('./routes/fileRoutes');
+const userbrandRoutes = require('./routes/userbrandRoute');
 
 const app = express();
-
 connectDB();
-/*const url='https://guest-posting-marketplace-web.netlify.app' ||"http://localhost:3000"
-const corsOptions = {
-  origin: url,
-  credentials: true, // if using cookies or sessions
-};
-app.use(cors(corsOptions));*/
-
 
 app.use(cors({
   origin: 'https://guest-posting-marketplace-web.netlify.app',
@@ -135,12 +125,20 @@ app.use("/form", formRoute);
 // app.use("/form", verifyUser, formRoute);
 app.use("/admin",adminRoute);
 app.use("/superAdmin", superAdminRoute);
+
+app.use('/instagraminfluencers', instagramInfluencerRoute);
+
+app.use('/userbrand', userbrandRoutes);
+
+
+
 app.use("/transaction",transactionRoute);
 
 app.get("/", (req, res) => {
     res.send("Hello from backend Cheers!!");
   });
+  app.use('/files', fileRoutes);
   
-
+  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

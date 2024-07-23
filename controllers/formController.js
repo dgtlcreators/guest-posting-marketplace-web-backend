@@ -4,7 +4,7 @@ const AdminData=require("../models/adminModel");
 module.exports.submitForm = async (req, res) => {
   try {
     const data = new AdminData(req.body);
-    console.log(data);
+   // console.log(data);
     await data.save();
     res.status(201).json({ message: "Form data saved successfully" });
   } catch (error) {
@@ -40,7 +40,8 @@ module.exports.getRequest = async (req, res) => {
       price,
       monthlyTraffic,
       mozSpamScore,
-      isBuyed
+      isBuyed,
+      userId
     } = req.body;
 
     // Construct the query object
@@ -55,7 +56,7 @@ module.exports.getRequest = async (req, res) => {
     if (monthlyTraffic) query.monthlyTraffic = monthlyTraffic;
     if (mozSpamScore) query.mozSpamScore = mozSpamScore;
     if (isBuyed) query.isBuyed = isBuyed;
-    
+    if(userId) query.userId=userId;
     // if (toDA) query.toDA = { $lte: Number(toDA) };
     // if (toDR) query.toDR = { $lte: Number(toDR) };
     // if (toPrice) query.toPrice = { $lte: Number(toPrice) };
@@ -137,8 +138,9 @@ module.exports.getFilteredData = async (req, res) => {
       DAto,
       DRto,
       priceTo,
-      publisherURL,
+      publisherURL,userId
     } = req.body;
+    console.log("request body",req.body)
 
     const filter = {};
 
@@ -160,9 +162,12 @@ module.exports.getFilteredData = async (req, res) => {
       filter.mozSpamScore = mozSpamScore;
      if (publisherURL)
        filter.publisherURL = publisherURL;
-
+    // if(userId) filter.userId=userId
     // Query the database with the constructed filter
+    const allusers=await AdminData.find();
+    console.log("All Users",allusers)
     const users = await AdminData.find(filter);
+    console.log("filtered users",users)
 
     // Check each filter condition sequentially
     if (!users.length) {
@@ -190,11 +195,14 @@ module.exports.getFilteredData = async (req, res) => {
           languageFilter,
           linkTypeFilter,
           mozSpamScoreFilter,
-          publisherURL,
+          publisherURL,userId
         });
+        console.log(data)
         if (data.length) return res.json(data);
       }
     }
+  
+    console.log(users,users.length)
  
     // If no conditions match, return the initial filtered users or empty array
     res.json(users.length ? users : []);
