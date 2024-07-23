@@ -1,6 +1,7 @@
 const User=require("../models/userModel.js");
 const bcryptjs=require("bcryptjs");
 const jwt=require("jsonwebtoken");
+const userActionModel = require("../models/UserInstagramInfluencer.js");
 
 
 // export const signupUser = async(req,res) => {
@@ -92,6 +93,7 @@ module.exports.loginUser = async (req, res) => {
     });
     // console.log(token)
     res.cookie("token", token);
+    await userActionModel.create({ userId: user._id, action: 'User logged in' });
     res.status(200).json({
       message: "User logged in successfully",
       success: true,
@@ -114,7 +116,7 @@ module.exports.markUserAsBuyed=async (req, res) =>{
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    user.isBuyed = true; // Assuming you have this field in your UserModel schema
+    
     await user.save();
     res.json({
       message: "User marked as buyed successfully",

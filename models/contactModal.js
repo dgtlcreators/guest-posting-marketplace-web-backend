@@ -6,8 +6,9 @@ const contactSchema = new mongoose.Schema({
   email: { type: String, required: true },
   message: { type: String, required: true },
   publisherId: { type: mongoose.Schema.Types.ObjectId, ref: "Publisher" }, // Reference to Publisher model
+  userId:{ type: mongoose.Schema.Types.ObjectId },
   createdAt: { type: Date, default: Date.now },
-});
+},{ timestamps: true });
 
 const Contact = mongoose.model("Contact", contactSchema);
 

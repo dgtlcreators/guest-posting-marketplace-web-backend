@@ -22,6 +22,7 @@ const adminFormDataSchema = new mongoose.Schema({
   price: { type: Number, min: 1, max: 100000 },
   monthlyTraffic: { type: String },
   mozSpamScore: { type: String },
-});
+  userId:{ type: mongoose.Schema.Types.ObjectId },
+},{ timestamps: true });
 
 module.exports=mongoose.model("AdminData", adminFormDataSchema);

@@ -1,5 +1,5 @@
 const AdminData=require("../models/adminModel.js");
-const Contact = require("../models/contact.js");
+const Contact = require("../models/contactModal.js");
 
 module.exports.getAllAdminData = async (req, res) => {
   try {
@@ -45,6 +45,7 @@ module.exports.getFilteredAdminData = async (req, res) => {
       publisherName,
       publisherEmail,
       publisherPhoneNo,
+      userId
     } = req.body;
 
     const filter = {};
@@ -66,6 +67,7 @@ module.exports.getFilteredAdminData = async (req, res) => {
     if (publisherName) filter.publisherName = publisherName;
     if (publisherEmail) filter.publisherEmail = publisherEmail;
     if (publisherPhoneNo) filter.publisherPhoneNo = publisherPhoneNo;
+    if (userId) filter.userId=userId;
 
     // Query the database with the constructed filter
     const users = await AdminData.find(filter);
@@ -137,14 +139,15 @@ module.exports.deleteOneAdminData = async (req, res) => {
 
 module.exports.addContactSpecificId=async (req, res) => {
   try {
-    const { name, email, message, publisherId } = req.body;
-
+    const { name, email, message, publisherId,userId } = req.body;
+    
     // Create new contact form submission
     const newContact = new Contact({
       name,
       email,
       message,
       publisherId,
+      userId
     });
 
     // Save to database
@@ -160,6 +163,7 @@ module.exports.addContactSpecificId=async (req, res) => {
 
 module.exports.getAllContactData = async (req, res) => {
   try {
+    
     const contactData = await Contact.find();
     if (!contactData) {
       return res
@@ -172,7 +176,7 @@ module.exports.getAllContactData = async (req, res) => {
   }
 };
 
-// Add this function to get contacts by publisherId
+//  get contacts by publisherId
 module.exports.getContactsByPublisherId = async (req, res) => {
   try {
     const publisherId = req.params.publisherId;
