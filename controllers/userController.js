@@ -78,19 +78,23 @@ module.exports.signupUser = async (req, res) => {
   }
 };
 
-
 module.exports.loginUser = async (req, res) => {
   try {
     const { email, password } = await req.body;
+    console.log("email, password ",email, password )
     const user = await User.findOne({ email });
+    console.log("user ",user)
     const isMatch = await bcryptjs.compare(password, user.password);
+    console.log("isMatch ",isMatch)
     if (!user || !isMatch) {
       return res.status(400).json({ message: "Invalid username or password" });
     }
     // Set a cookie upon successful login
+    
     const token = jwt.sign({ email: user.email }, "jwt-secret", {
       expiresIn: "300",
     });
+    console.log("token ",token)
     // console.log(token)
     res.cookie("token", token);
     await userActionModel.create({ userId: user._id, action: 'User logged in' });

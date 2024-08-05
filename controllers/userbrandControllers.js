@@ -2,48 +2,61 @@ const InstagramInfluencerModel = require('../models/instagramInfluencerModel');
 const ApplicationBrandUser = require('../models/applicationBrandUser');
 
 
-/*const filterInstagramInfluencers = async (req, res) => {
+const filterInstagramInfluencers = async (req, res) => {
+  const { 
+    username, 
+    followersCountFrom, 
+    followersCountTo, 
+    engagementRateFrom, 
+    engagementRateTo, 
+    category, 
+    location, 
+    language, 
+    verifiedStatus,
+    collaborationRates
+  } = req.body;
+  console.log(req.body)
+
   try {
-    const {
-      minFollowers,
-      maxFollowers,
-      minEngagementRate,
-      maxEngagementRate,
-      category,
-      location,
-      minCollabRate,
-      maxCollabRate,
-      verifiedStatus,
-      language,
-      recentActivity,
-      minRating,
-      maxRating,
-    } = req.query;
+    const query = {};
 
-    const filters = {};
+    if (username) query.username = { $regex: new RegExp(username, 'i') };
+    if (followersCountFrom !== undefined && followersCountFrom !== "") query.followersCount = { ...query.followersCount, $gte: Number(followersCountFrom) };
+    if (followersCountTo !== undefined && followersCountTo !== "") query.followersCount = { ...query.followersCount, $lte: Number(followersCountTo) };
+    if (engagementRateFrom !== undefined && engagementRateFrom !== "") query.engagementRate = { ...query.engagementRate, $gte: Number(engagementRateFrom) };
+    if (engagementRateTo !== undefined && engagementRateTo !== "") query.engagementRate = { ...query.engagementRate, $lte: Number(engagementRateTo) };
+    if (category) query.category = category;
+    if (location) query.location = location;
+    if (language) query.language = language;
+    if (verifiedStatus !== undefined && verifiedStatus !== "") query.verifiedStatus = verifiedStatus;
 
-    if (minFollowers) filters.followersCount = { $gte: parseInt(minFollowers) };
-    if (maxFollowers) filters.followersCount = { ...filters.followersCount, $lte: parseInt(maxFollowers) };
-    if (minEngagementRate) filters.engagementRate = { $gte: parseFloat(minEngagementRate) };
-    if (maxEngagementRate) filters.engagementRate = { ...filters.engagementRate, $lte: parseFloat(maxEngagementRate) };
-    if (category) filters.category = category;
-    if (location) filters.location = location;
-    if (minCollabRate) filters['collaborationRates.post'] = { $gte: parseFloat(minCollabRate) }; // Example for post rates
-    if (maxCollabRate) filters['collaborationRates.post'] = { ...filters['collaborationRates.post'], $lte: parseFloat(maxCollabRate) };
-    if (verifiedStatus !== undefined) filters.verifiedStatus = verifiedStatus === 'true';
-    if (language) filters.language = language;
-    if (recentActivity) filters.updatedAt = { $gte: new Date(Date.now() - 30*24*60*60*1000) }; // Last 30 days
-    if (minRating) filters.rating = { $gte: parseFloat(minRating) }; // Assuming you have a rating field
-    if (maxRating) filters.rating = { ...filters.rating, $lte: parseFloat(maxRating) };
+   //if (verifiedStatus !== "") {
+  //  query.verifiedStatus = query.verifiedStatus === "true"; // or adjust based on how you handle booleans
+ // }
 
-    const influencers = await InstagramInfluencerModel.find(filters);
+    if (collaborationRates) {
+      if (collaborationRates.postFrom !== undefined && collaborationRates.postFrom !== "") query['collaborationRates.post'] = { ...query['collaborationRates.post'], $gte: Number(collaborationRates.postFrom) };
+      if (collaborationRates.postTo !== undefined && collaborationRates.postTo !== "") query['collaborationRates.post'] = { ...query['collaborationRates.post'], $lte: Number(collaborationRates.postTo) };
+      if (collaborationRates.storyFrom !== undefined && collaborationRates.storyFrom !== "") query['collaborationRates.story'] = { ...query['collaborationRates.story'], $gte: Number(collaborationRates.storyFrom) };
+      if (collaborationRates.storyTo !== undefined && collaborationRates.storyTo !== "") query['collaborationRates.story'] = { ...query['collaborationRates.story'], $lte: Number(collaborationRates.storyTo) };
+      if (collaborationRates.reelFrom !== undefined && collaborationRates.reelFrom !== "") query['collaborationRates.reel'] = { ...query['collaborationRates.reel'], $gte: Number(collaborationRates.reelFrom) };
+      if (collaborationRates.reelTo !== undefined && collaborationRates.reelTo !== "") query['collaborationRates.reel'] = { ...query['collaborationRates.reel'], $lte: Number(collaborationRates.reelTo) };
+    }
+
+    const influencers = await InstagramInfluencerModel.find(query);
     res.json(influencers);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
   }
-};*/
+};
 
-const filterInstagramInfluencers =async (req, res) => {
+
+
+
+
+
+/*const filterInstagramInfluencers =async (req, res) => {
   const { 
     username, 
     followersCount, 
@@ -88,7 +101,7 @@ const filterInstagramInfluencers =async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-};
+};*/
 
 
 const submitForm = async (req, res) => {
