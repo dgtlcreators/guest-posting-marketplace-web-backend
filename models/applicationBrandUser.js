@@ -10,6 +10,6 @@ const applicationBrandUserSchema = new mongoose.Schema({
   budget: String,
   additionalNotes: String,
   influencerId:String
-});
+},{ timestamps: true });
 
 module.exports = mongoose.model('ApplicationBrandUser', applicationBrandUserSchema);
