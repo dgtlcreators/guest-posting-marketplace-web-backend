@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: ["Admin", "User", "Super Admin",'Brand User'],
+      default: "Brand User",
     },
    /* isBuyed: {
       type: Boolean,
