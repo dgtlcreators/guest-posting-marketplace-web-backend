@@ -15,7 +15,7 @@ const ExpertiseSchema = new mongoose.Schema({
 const LanguageSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    
   },
   proficiency: {
     type: String,
@@ -45,6 +45,7 @@ const ContentWriterSchema = new mongoose.Schema({
     type: [LanguageSchema],
     
   },
+  location: { type: String },
   collaborationRates: {
     post: { type: Number,  },
     story: { type: Number, },

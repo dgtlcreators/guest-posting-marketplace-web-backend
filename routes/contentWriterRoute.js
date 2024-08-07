@@ -7,7 +7,7 @@ const {
     createContentWriter,
   getContentWriterById,
   updateContentWriter,
-  deleteContentWriter,
+  deleteContentWriter,getFilteredContentWriters
   //getFilteredcontentWriter,
   //addcontentWriterContactSpecificId,
  // getAllContentWriterContactData,
@@ -34,6 +34,7 @@ router.post('/createcontentwriter', createContentWriter);
 router.get('/getcontentwriter/:id', getContentWriterById);
 router.put('/updatecontentwriter/:id', updateContentWriter);
 router.delete('/deletecontentwriter/:id', deleteContentWriter);
+router.post('/contentWritersFilter', getFilteredContentWriters);
 
 //router.post("/getFilteredAdminData", getFilteredcontentWriter);
 
