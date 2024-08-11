@@ -15,9 +15,10 @@ module.exports.getAllContentWriters = async (req, res) => {
 
 
 module.exports.createContentWriter = async (req, res) => {
-  const { name, bio, experience, expertise, languages,location, collaborationRates, email } = req.body;
+  const { name, bio, experience, expertise, languages,location, collaborationRates,industry,subCategories, email } = req.body;
   try {
-    const newWriter = new ContentWriter({ name, bio, experience, expertise, languages,location, collaborationRates, email });
+    const newWriter = new ContentWriter({ name, bio, experience, expertise, languages,location, collaborationRates,industry,//subCategories
+       email });
     const writer = await newWriter.save();
     res.status(201).json({ message: 'Writer created successfully', data: writer });
   } catch (err) {
@@ -41,7 +42,7 @@ module.exports.getContentWriterById = async (req, res) => {
 };
 
 module.exports.updateContentWriter = async (req, res) => {
-    const { name, bio, experience, expertise,location, languages, collaborationRates, email } = req.body;
+    const { name, bio, experience, expertise,location, languages, collaborationRates,industry,subCategories, email } = req.body;
     try {
       let writer = await ContentWriter.findById(req.params.id);
       if (!writer) return res.status(404).json({ message: 'Writer not found' });
@@ -54,6 +55,8 @@ module.exports.updateContentWriter = async (req, res) => {
       writer.languages = languages || writer.languages;
       writer.collaborationRates = collaborationRates || writer.collaborationRates;
       writer.email = email || writer.email;
+      writer.industry=industry || writer.industry;
+      //writer.subCategories=subCategories || writer.subCategories;
   
       writer = await writer.save();
       res.json({ message: 'Writer updated successfully', data: writer });
@@ -219,7 +222,7 @@ module.exports.deleteContentWriter = async (req, res) => {
   }
 };*/
 
-module.exports.getFilteredContentWriters = async (req, res) => {
+/*module.exports.getFilteredContentWriters = async (req, res) => {
  // console.log(req.body);
   const { 
     name, 
@@ -229,7 +232,7 @@ module.exports.getFilteredContentWriters = async (req, res) => {
     email, 
     expertise, 
     languages, location,
-    languageProficiency,
+    languageProficiency,industry,subCategories,
     collaborationRates 
   } = req.body;
 
@@ -262,7 +265,7 @@ module.exports.getFilteredContentWriters = async (req, res) => {
           }))
         }
       };
-    }*/
+    }
 
       if (languages && languages.length > 0) {
         query.languages = {
@@ -291,6 +294,24 @@ module.exports.getFilteredContentWriters = async (req, res) => {
       };
     }
     if (location) query.location = location;
+   /* if (industry) query.industry = { $regex: new RegExp(industry, 'i') };
+
+    // Handle subCategories filtering
+    if (subCategories && subCategories.length > 0) {
+      query.subCategories = {
+        $elemMatch: {
+          type: { $in: subCategories }
+        }
+      };
+    }
+      if (industry) query.industry = { $regex: new RegExp(industry, 'i') };
+
+      // Handle subCategories filtering
+      if (subCategories && subCategories.length > 0) {
+        query.subCategories = {
+          $all: subCategories.map(subCategory => new RegExp(subCategory, 'i'))
+        };
+      }
     // Handle collaborationRates filtering
     if (collaborationRates) {
       if (collaborationRates.postFrom !== undefined && collaborationRates.postFrom !== "") query['collaborationRates.post'] = { ...query['collaborationRates.post'], $gte: Number(collaborationRates.postFrom) };
@@ -309,8 +330,138 @@ module.exports.getFilteredContentWriters = async (req, res) => {
     res.status(500).json({ error: "Internal server error",data:error });
   }
 };
+*/
 
+module.exports.getFilteredContentWriters = async (req, res) => {
+  const { 
+    name, 
+    bio, 
+    experienceFrom, 
+    experienceTo, 
+    email, 
+    expertise, 
+    languages, 
+    location,
+    languageProficiency,
+    industry,
+    
+    collaborationRates 
+  } = req.body;
 
+  try {
+    const query = {};
+
+    if (name) query.name = { $regex: new RegExp(name, 'i') };
+    if (bio) query.bio = { $regex: new RegExp(bio, 'i') };
+    if (experienceFrom !== undefined && experienceFrom !== "") query.experience = { ...query.experience, $gte: Number(experienceFrom) };
+    if (experienceTo !== undefined && experienceTo !== "") query.experience = { ...query.experience, $lte: Number(experienceTo) };
+    if (email) query.email = { $regex: new RegExp(email, 'i') };
+
+    // Handle expertise filtering with "Add Other"
+    if (expertise && expertise.length > 0) {
+      query.expertise = { 
+        $elemMatch: { 
+          type: { $in: expertise.map(exp => new RegExp(exp.type || exp.other, 'i')) }
+        }
+      };
+    }
+
+    // Handle languages filtering
+    if (languages && languages.length > 0) {
+      query.languages = {
+        $elemMatch: {
+          $and: languages.map(lang => {
+            const langQuery = {};
+            if (lang.name) {
+              langQuery.name = { $regex: new RegExp(lang.name, 'i') };
+            }
+            if (lang.proficiency) {
+              langQuery.proficiency = { $regex: new RegExp(lang.proficiency, 'i') };
+            }
+            return langQuery;
+          })
+        }
+      };
+    }
+
+    // Handle languageProficiency filtering
+    if (languageProficiency) {
+      query.languages = {
+        $elemMatch: { 
+          proficiency: { $regex: new RegExp(languageProficiency, 'i') }
+        }
+      };
+    }
+
+    if (location) query.location = location;
+
+    if (industry && industry.length > 0) {
+      query.industry = {
+          $elemMatch: {
+              $or: industry.map(ind => {
+                  const industryQuery = {};
+                  
+                
+                  if (ind.type) {
+                      industryQuery.type = { $regex: new RegExp(ind.type, 'i') };
+                  }
+  
+                
+                  if (ind.subCategories && ind.subCategories.length > 0) {
+                      industryQuery.subCategories = {
+                          $elemMatch: {
+                              $and: ind.subCategories.map(sub => {
+                                  const subCategoryQuery = {};
+                                  if (sub.type) {
+                                      subCategoryQuery.type = { $regex: new RegExp(sub.type, 'i') };
+                                  }
+                                  if (sub.other) {
+                                      subCategoryQuery.other = { $regex: new RegExp(sub.other, 'i') };
+                                  }
+                                  return subCategoryQuery;
+                              })
+                          }
+                      };
+                  }
+  
+                  return industryQuery;
+              })
+          }
+      };
+  }
+  
+   
+     /* if (industry && industry.some(ind => ind.type || ind.other || (ind.subCategories && ind.subCategories.some(sub => sub.type || sub.other)))) {
+        query.industry = {
+          $elemMatch: {
+            $and: [
+              { type: { $regex: new RegExp(industry.type || industry.other, 'i') } },
+              { 'subCategories.type': { $regex: new RegExp(industry.subCategories?.map(sub => sub.type || sub.other).join('|'), 'i') } }
+            ]
+          }
+        };
+      }*/
+
+   
+   
+
+    // Handle collaborationRates filtering
+    if (collaborationRates) {
+      if (collaborationRates.postFrom !== undefined && collaborationRates.postFrom !== "") query['collaborationRates.post'] = { ...query['collaborationRates.post'], $gte: Number(collaborationRates.postFrom) };
+      if (collaborationRates.postTo !== undefined && collaborationRates.postTo !== "") query['collaborationRates.post'] = { ...query['collaborationRates.post'], $lte: Number(collaborationRates.postTo) };
+      if (collaborationRates.storyFrom !== undefined && collaborationRates.storyFrom !== "") query['collaborationRates.story'] = { ...query['collaborationRates.story'], $gte: Number(collaborationRates.storyFrom) };
+      if (collaborationRates.storyTo !== undefined && collaborationRates.storyTo !== "") query['collaborationRates.story'] = { ...query['collaborationRates.story'], $lte: Number(collaborationRates.storyTo) };
+      if (collaborationRates.reelFrom !== undefined && collaborationRates.reelFrom !== "") query['collaborationRates.reel'] = { ...query['collaborationRates.reel'], $gte: Number(collaborationRates.reelFrom) };
+      if (collaborationRates.reelTo !== undefined && collaborationRates.reelTo !== "") query['collaborationRates.reel'] = { ...query['collaborationRates.reel'], $lte: Number(collaborationRates.reelTo) };
+    }
+
+    const writers = await ContentWriter.find(query);
+    res.json({ message: 'Writers filtered successfully', data: writers });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error", data: error });
+  }
+};
 
 
 
