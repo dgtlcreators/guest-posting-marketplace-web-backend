@@ -15,6 +15,7 @@ const instagramInfluencerRoute = require('./routes/instagramInfluencerRoute');
 const fileRoutes = require('./routes/fileRoutes');
 const userbrandRoutes = require('./routes/userbrandRoute');
 const contentWriterRoute = require('./routes/contentWriterRoute');
+const youtubeInfluencerRoute = require('./routes/youtubeInfluencerRoute');
 
 const app = express();
 connectDB();
@@ -130,6 +131,7 @@ app.use("/superAdmin", superAdminRoute);
 
 app.use('/instagraminfluencers', instagramInfluencerRoute);
 app.use('/contentwriters', contentWriterRoute);
+app.use('/youtubeinfluencers', youtubeInfluencerRoute);
 
 app.use('/userbrand', userbrandRoutes);
 
