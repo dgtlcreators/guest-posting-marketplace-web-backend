@@ -139,7 +139,7 @@ module.exports.getFilteredData = async (req, res) => {
       DAto,
       DRto,
       priceTo,
-      publisherURL,userId
+      publisherURL,userId,publisherName
     } = req.body;
     //console.log("request body",req.body)
 
@@ -161,8 +161,11 @@ module.exports.getFilteredData = async (req, res) => {
       filter.monthlyTraffic = monthlyTraffic;
     if (mozSpamScore && mozSpamScore !== "allMozSpamScore")
       filter.mozSpamScore = mozSpamScore;
+    
      if (publisherURL)
        filter.publisherURL = publisherURL;
+     if (publisherName)
+      filter.publisherName =publisherName;
     // if(userId) filter.userId=userId
     // Query the database with the constructed filter
     const allusers=await AdminData.find();
