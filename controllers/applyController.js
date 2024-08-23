@@ -12,8 +12,9 @@ module.exports.applyForm= async (req, res) => {
 
   const today = new Date().toISOString().split('T')[0]; 
   const applicationsToday = await Apply.countDocuments({
-    userId,publisher,
-    section,
+    userId,
+    //publisher,
+   // section,
     createdAt: { $gte: new Date(today) },
   });
 
