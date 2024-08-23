@@ -2,6 +2,7 @@
 const Contact = require("../models/contactModal.js");
 
 const ContentWriter = require('../models/contentWriterModel.js');
+const Activity = require('../models/activity.js');
 
 module.exports.getAllContentWriters = async (req, res) => {
   try {

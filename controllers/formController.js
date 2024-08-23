@@ -1,5 +1,6 @@
 // import formData from "../models/form.model.js";
 const AdminData=require("../models/adminModel");
+const Activity = require('../models/activity.js');
 
 module.exports.submitForm = async (req, res) => {
   try {
@@ -140,7 +141,7 @@ module.exports.getFilteredData = async (req, res) => {
       priceTo,
       publisherURL,userId
     } = req.body;
-    console.log("request body",req.body)
+    //console.log("request body",req.body)
 
     const filter = {};
 
@@ -165,9 +166,9 @@ module.exports.getFilteredData = async (req, res) => {
     // if(userId) filter.userId=userId
     // Query the database with the constructed filter
     const allusers=await AdminData.find();
-    console.log("All Users",allusers)
+   // console.log("All Users",allusers)
     const users = await AdminData.find(filter);
-    console.log("filtered users",users)
+   // console.log("filtered users",users)
 
     // Check each filter condition sequentially
     if (!users.length) {
@@ -197,12 +198,23 @@ module.exports.getFilteredData = async (req, res) => {
           mozSpamScoreFilter,
           publisherURL,userId
         });
-        console.log(data)
+       // console.log(data)
         if (data.length) return res.json(data);
       }
     }
+    /*const activity = new Activity({
+      userId: req.user?._id,
+      action: 'Get Guest Post Filtered List',
+      section: 'Guest Post',
+      role: req.user.role,
+      details: {
+          influencerId: filter,
+          influencerName: users.length,
+      }
+  });
+  await activity.save();*/
   
-    console.log(users,users.length)
+    //console.log(users,users.length)
  
     // If no conditions match, return the initial filtered users or empty array
     res.json(users.length ? users : []);

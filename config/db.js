@@ -12,6 +12,8 @@ const connectDB = async () => {
         
             dbName:"guest-posting-marketplace-web"
         });
+        
+        
 
         gfs = Grid(conn.connection.db, mongoose.mongo);
         gfs.collection('uploads');
@@ -43,6 +45,31 @@ const connectDB = async () => {
         }else{
             console.log('Default Admin already created');
         }
+
+      /*  async function listIndexes() {
+            const url = process.env.MONGO_URI || 'your-mongodb-connection-string';
+            await mongoose.connect(url, { dbName: 'guest-posting-marketplace-web' });
+          
+            const collection = mongoose.connection.db.collection('activities');
+            const indexes = await collection.indexes();
+          
+            console.log("indexes",indexes);
+            mongoose.disconnect();
+          }
+          
+          listIndexes();
+          async function dropIndex() {
+            const url = process.env.MONGO_URI || 'your-mongodb-connection-string';
+            await mongoose.connect(url, { dbName: 'guest-posting-marketplace-web' });
+          
+            const collection = mongoose.connection.db.collection('activities');
+            await collection.dropIndex('contentWriter.email_1');
+          
+            console.log('Index dropped');
+            mongoose.disconnect();
+          }
+          
+          dropIndex();*/
     } 
      catch (err) {
         console.error(err.message);

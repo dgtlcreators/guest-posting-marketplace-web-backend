@@ -1,5 +1,6 @@
 const InstagramInfluencerModel = require('../models/instagramInfluencerModel');
 const ApplicationBrandUser = require('../models/applicationBrandUser');
+const Activity = require('../models/activity.js');
 
 
 const filterInstagramInfluencers = async (req, res) => {
@@ -15,7 +16,7 @@ const filterInstagramInfluencers = async (req, res) => {
     verifiedStatus,
     collaborationRates
   } = req.body;
-  console.log(req.body)
+  //console.log(req.body)
 
   try {
     const query = {};

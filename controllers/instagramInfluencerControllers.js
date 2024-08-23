@@ -1,5 +1,6 @@
 const InstagramInfluencer = require("../models/instagramInfluencerModel")
 const { param } = require("../routes/instagramInfluencerRoute")
+const Activity = require('../models/activity.js');
 
 
 
@@ -29,8 +30,22 @@ module.exports.addInstagraminfluencer = async (req, res) => {
           reel: Number(collaborationRates.reel) || 0
         }
       });
+
+       
+      //console.log("req.user: ",req.user)
+     /* const activity = new Activity({
+        userId: req.user._id, 
+        action: 'Added Instagram Influencer',
+        section: 'Instagram Influencer',
+        role: req.user.role, 
+        details: {
+            influencerId: instagramInfluencer._id,
+            influencerName: instagramInfluencer.name, 
+        }
+    });
+    await activity.save();*/
   
-      // Save document to database
+      
       await instagramInfluencer.save();
       res.status(201).json({ instagramInfluencer, message: "Instagram Influencer added Successfully" });
     } catch (error) {
@@ -65,6 +80,18 @@ module.exports.getAllInstagraminfluencer=async(req,res)=>{
     try {
         const instagramInfluencer=await InstagramInfluencer.find()
         
+     /* console.log("req.user: ",req)
+        const activity = new Activity({
+          userId: req.user?._id,
+          action: 'Get all Instagram Influencer',
+          section: 'Instagram Influencer',
+          role: req.user.role,
+          details: {
+              influencerId: instagramInfluencer._id,
+              influencerName: instagramInfluencer.name,
+          }
+      });
+      await activity.save();*/
             res.status(200).json({instagramInfluencer,message:"Instagram Influencer get all data Successfully"})
             
         } catch (error) {
@@ -77,7 +104,20 @@ module.exports.getInstagraminfluencerById=async(req,res)=>{
         
         const instagramInfluencer=await InstagramInfluencer.findById(req.params.id)
         if(!instagramInfluencer) return res.status(404).json({message:"Instagram Influencer not found"})
-            res.status(200).json({instagramInfluencer,message:"Instagram Influencer get by id Successfully"})
+            
+         /* const activity = new Activity({
+            userId: req.user?._id,
+            action: 'Get  Instagram Influencer By Id',
+            section: 'Instagram Influencer',
+            role: req.user.role,
+            details: {
+                influencerId: instagramInfluencer._id,
+                influencerName: instagramInfluencer.name,
+            }
+        });
+        await activity.save();*/
+
+          res.status(200).json({instagramInfluencer,message:"Instagram Influencer get by id Successfully"})
             
         } catch (error) {
             res.status(400).json({error:error.message})
@@ -121,7 +161,20 @@ module.exports.updateInstagraminfluencer=async(req,res)=>{
     const instagramInfluencer = await InstagramInfluencer.findByIdAndUpdate(req.params.id, updatedData, { new: true });
        // const instagramInfluencer=await InstagramInfluencer.findByIdAndUpdate(req.params.id,req.body,{new:true})
         if(!instagramInfluencer) return res.status(404).json({message:"Instagram Influencer not found"})
-            res.status(200).json({instagramInfluencer,message:"Instagram Influencer updated  Successfully"})
+            
+        /*  console.log("req.user: ",req.user)
+          const activity = new Activity({
+            userId: req.user._id,
+            action: 'Updated Instagram Influencer',
+            section: 'Instagram Influencer',
+            role: req.user.role,
+            details: {
+                influencerId: instagramInfluencer._id,
+                influencerName: instagramInfluencer.name,
+            }
+        });
+        await activity.save();*/
+          res.status(200).json({instagramInfluencer,message:"Instagram Influencer updated  Successfully"})
             
         } catch (error) {
             res.status(400).json({error:error.message})
@@ -133,6 +186,19 @@ module.exports.deleteInstagraminfluencer=async(req,res)=>{
         const instagramInfluencer=await InstagramInfluencer.findByIdAndDelete(req.params.id)
         if(!instagramInfluencer) return res.status(404).json({message:"Instagram Influencer not found"})
         
+
+         /* const activity = new Activity({
+            userId: req.user._id,
+            action: 'Deleted Instagram Influencer',
+            section: 'Instagram Influencer',
+            role: req.user.role,
+            details: {
+                influencerId: instagramInfluencer._id,
+                influencerName: instagramInfluencer.name,
+            }
+        });
+        await activity.save();*/
+
             res.status(200).json({instagramInfluencer,message:"Instagram Influencer deleted Successfully"})
             
         } catch (error) {

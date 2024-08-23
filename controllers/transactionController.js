@@ -1,5 +1,6 @@
 const Transaction = require('../models/transaction.js');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const Activity = require('../models/activity.js');
 
 module.exports.newTransaction  =async (req, res) => {
   const { amount, itemId, userId } = req.body;
