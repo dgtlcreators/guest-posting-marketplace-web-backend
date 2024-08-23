@@ -1,5 +1,6 @@
 const AdminData=require("../models/adminModel.js");
 const Contact = require("../models/contactModal.js");
+const Activity = require('../models/activity.js');
 
 module.exports.getAllAdminData = async (req, res) => {
   try {

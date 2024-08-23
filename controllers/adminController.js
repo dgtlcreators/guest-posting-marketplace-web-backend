@@ -1,4 +1,5 @@
 const AdminData =require("../models/adminModel.js");
+const Activity = require('../models/activity.js');
 
 module.exports.getAdminData = async (req, res) => {
   try {
@@ -29,7 +30,7 @@ module.exports.getAdminData = async (req, res) => {
 
 module.exports.createAdminData = async (req, res) => {
   try {
-    // Destructure fields from request body
+
     const {
       publisherURL,
       publisherName,
@@ -43,10 +44,10 @@ module.exports.createAdminData = async (req, res) => {
       price,
       monthlyTraffic,
       mozSpamScore,
-      userId, // Ensure userId is included
+      userId, 
     } = req.body;
 
-    // Create new AdminData instance with userId included
+
     const newAdminData = new AdminData({
       publisherURL,
       publisherName,
@@ -60,10 +61,10 @@ module.exports.createAdminData = async (req, res) => {
       price,
       monthlyTraffic,
       mozSpamScore,
-      userId, // Include userId here
+      userId, 
     });
 
-    // Save the new AdminData entry to the database
+
     const savedData = await newAdminData.save();
 
     res.status(200).json(savedData);

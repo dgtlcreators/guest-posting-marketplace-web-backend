@@ -2,6 +2,7 @@ const User=require("../models/userModel.js");
 const bcryptjs=require("bcryptjs");
 const jwt=require("jsonwebtoken");
 const userActionModel = require("../models/UserInstagramInfluencer.js");
+const Activity = require('../models/activity.js');
 
 
 // export const signupUser = async(req,res) => {
