@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["Admin", "User", "Super Admin",'Brand User'],
       default: "Brand User",
+      index: true 
     },
    /* isBuyed: {
       type: Boolean,
