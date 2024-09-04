@@ -157,7 +157,7 @@ const connectDB = async () => {
             mongoose.disconnect();
           }
           
-          dropIndex();*/
+          dropIndex();//end place
     } 
      catch (err) {
         console.error(err.message);
