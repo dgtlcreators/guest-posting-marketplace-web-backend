@@ -1,5 +1,72 @@
 const mongoose = require('mongoose');
 const User = require('../models/userModel');
+const bcrypt = require('bcryptjs');
+const Grid = require('gridfs-stream');
+
+let gfs;
+
+const connectDB = async () => {
+    const url = process.env.MONGO_URI || "mongodb+srv://guest-posting-marketplace-web:guest-posting-marketplace-web@cluster0.kjvasef.mongodb.net/guest-posting-marketplace-web?retryWrites=true&w=majority&appName=Cluster0";
+
+    try {
+        // Measure the start time for DB connection
+        const dbConnectStart = process.hrtime();
+
+        // Connect to MongoDB
+        const conn = await mongoose.connect(url, {
+            dbName: "guest-posting-marketplace-web",
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            maxPoolSize: 10, 
+            serverSelectionTimeoutMS: 3000,
+        });
+
+        // Measure the end time for DB connection
+        const dbConnectEnd = process.hrtime(dbConnectStart);
+        console.log(`Database connection took ${dbConnectEnd[0]} seconds and ${dbConnectEnd[1] / 1000000} milliseconds`);
+
+        // Initialize GridFS
+        gfs = Grid(conn.connection.db, mongoose.mongo);
+        gfs.collection('uploads');
+        console.log('MongoDB connected');
+
+        // Function to check and create default users
+        const checkAndCreateUser = async (role, name, email, password) => {
+            const userCheckStart = process.hrtime();
+            const user = await User.findOne({ role });
+
+            const userCheckEnd = process.hrtime(userCheckStart);
+            console.log(`Checking for ${role} took ${userCheckEnd[0]} seconds and ${userCheckEnd[1] / 1000000} milliseconds`);
+
+            if (!user) {
+                const newUser = new User({
+                    name,
+                    email,
+                    password: await bcrypt.hash(password, 10),
+                    role
+                });
+                await newUser.save();
+                console.log(`${role} created`);
+            } else {
+                console.log(`${role} already created`);
+            }
+        };
+
+        // Check and create default Super Admin and Admin
+        await checkAndCreateUser('Super Admin', 'Default Super Admin', 'superadmin@example.com', 'superadminpassword');
+        await checkAndCreateUser('Admin', 'Default Admin', 'admin@example.com', 'adminpassword');
+
+    } catch (err) {
+        console.error(err.message);
+        process.exit(1);
+    }
+};
+
+module.exports = connectDB;
+
+
+/*const mongoose = require('mongoose');
+const User = require('../models/userModel');
 const bcrypt=require("bcryptjs")
 const Grid = require('gridfs-stream');
 
@@ -100,3 +167,4 @@ const connectDB = async () => {
 
 module.exports = connectDB;
 
+*/
