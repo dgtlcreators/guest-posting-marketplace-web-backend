@@ -16,7 +16,7 @@ const connectDB = async () => {
             useUnifiedTopology: true,
            // poolSize: 10,
            maxPoolSize: 10, 
-            serverSelectionTimeoutMS: 5000
+            serverSelectionTimeoutMS: 3000,
         });
         const dbConnectEnd = process.hrtime(dbConnectStart);
         console.log(`Database connection took ${dbConnectEnd[0]} seconds and ${dbConnectEnd[1] / 1000000} milliseconds`);

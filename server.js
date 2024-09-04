@@ -1,3 +1,18 @@
+const dns = require('dns');
+const dnscache = require('dnscache')({
+    enable: true,
+    ttl: 300, // Time to live in seconds, adjust as needed
+    cachesize: 1000 // Cache up to 1000 items
+});
+
+// Replace the default DNS servers with Google's public DNS or your preferred DNS
+dns.setServers(['8.8.8.8', '8.8.4.4']);
+
+
+
+
+
+
 const express = require('express');
 const connectDB = require('./config/db');
 const cors = require('cors');
