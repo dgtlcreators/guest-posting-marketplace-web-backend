@@ -359,13 +359,49 @@ module.exports.getFilteredContentWriters = async (req, res) => {
     if (email) query.email = { $regex: new RegExp(email, 'i') };
 
     // Handle expertise filtering with "Add Other"
-    if (expertise && expertise.length > 0) {
+   /* if (expertise && expertise.length > 0) {
       query.expertise = { 
         $elemMatch: { 
           type: { $in: expertise.map(exp => new RegExp(exp.type || exp.other, 'i')) }
         }
       };
-    }
+    }*/
+    
+
+        /*if (expertise && expertise.length > 0) {
+          query.expertise = {
+            $elemMatch: {
+              $or: expertise.map(exp => {
+                const expQuery = {};
+                if (exp) {
+                  expQuery.type = { $regex: new RegExp(exp, 'i') };
+                }
+                return expQuery;
+              })
+            }
+          };
+        }*/
+
+          if (expertise && expertise.length > 0) {
+            query.expertise = {
+              $elemMatch: {
+                $or: expertise.map(exp => {
+                  const expQuery = {};
+                  
+                  if (exp.type) {
+                    expQuery.type = { $regex: new RegExp(exp.type, 'i') };
+                  }
+                  
+                  if (exp.other) {
+                    expQuery.other = { $regex: new RegExp(exp.other, 'i') };
+                  }
+                  
+                  return expQuery;
+                })
+              }
+            };
+          }
+          
 
     // Handle languages filtering
     if (languages && languages.length > 0) {

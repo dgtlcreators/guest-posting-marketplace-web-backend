@@ -6,6 +6,7 @@ const Activity = require('../models/activity.js');
 const filterInstagramInfluencers = async (req, res) => {
   const { 
     username, 
+    fullName,
     followersCountFrom, 
     followersCountTo, 
     engagementRateFrom, 
@@ -22,6 +23,7 @@ const filterInstagramInfluencers = async (req, res) => {
     const query = {};
 
     if (username) query.username = { $regex: new RegExp(username, 'i') };
+    if (fullName) query.fullName = { $regex: new RegExp(fullName, 'i') };
     if (followersCountFrom !== undefined && followersCountFrom !== "") query.followersCount = { ...query.followersCount, $gte: Number(followersCountFrom) };
     if (followersCountTo !== undefined && followersCountTo !== "") query.followersCount = { ...query.followersCount, $lte: Number(followersCountTo) };
     if (engagementRateFrom !== undefined && engagementRateFrom !== "") query.engagementRate = { ...query.engagementRate, $gte: Number(engagementRateFrom) };
