@@ -171,7 +171,7 @@ module.exports.getFilteredYoutubeInfluences=async(req,res)=>{
   try {
 
     const {
-      username,
+      username,fullname,
       followersCountFrom,followersCountTo,
       videosCountFrom,videosCountTo,
       engagementRateFrom,engagementRateTo,
@@ -187,6 +187,7 @@ module.exports.getFilteredYoutubeInfluences=async(req,res)=>{
     const query = {};
 
     if(username) query.username={$regex:new RegExp(username,'i')}
+    if(fullname) query.fullname={$regex:new RegExp(fullname,'i')}
     if(followersCountFrom!==undefined && followersCountFrom !=="") query.followersCount={...query.followersCount,$gte:Number(followersCountFrom)}
     if(followersCountFrom!==undefined && followersCountTo !=="") query.followersCount={...query.followersCount,$lte:Number(followersCountTo)}
     if(videosCountFrom!==undefined && videosCountFrom !=="") query.videosCount={...query.videosCount,$gte:Number(videosCountFrom)}
