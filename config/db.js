@@ -17,8 +17,15 @@ const connectDB = async () => {
             dbName: "guest-posting-marketplace-web",
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            maxPoolSize: 10, 
-            serverSelectionTimeoutMS: 3000,
+            maxPoolSize: 20,//10,
+            serverSelectionTimeoutMS:2000,// 3000,
+           // keepAlive: true,
+           // keepAliveInitialDelay: 300000
+  
+           connectTimeoutMS:10000, //5000, //10000,  
+           socketTimeoutMS: 20000,//45000,
+         
+           
         });
 
         // Measure the end time for DB connection
