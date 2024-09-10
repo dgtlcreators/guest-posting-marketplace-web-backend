@@ -48,6 +48,8 @@ module.exports.applyAllData = async (req, res) => {
 };
 
 
+
+
 module.exports.applyData = async (req, res) => {
   try {
     const { id } = req.params;
