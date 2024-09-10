@@ -35,7 +35,7 @@ const activitySchema = new mongoose.Schema({
     },
     section: {
         type: String,
-        enum: ['Instagram Influencer', 'YouTube Influencer', 'Content Writer', 'Guest Post', 'Apply',"Super Admin"],
+        enum: ['Instagram Influencer', 'YouTube Influencer', 'Content Writer', 'Guest Post', 'Apply',"Super Admin","User"],
         required: true,
     },
     timestamp: {
