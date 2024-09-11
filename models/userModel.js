@@ -29,6 +29,9 @@ const userSchema = new mongoose.Schema(
         delete: { type: Boolean, default: false },
         bookmark: { type: Boolean, default: true },
         apply: { type: Boolean, default: true },
+        profile: { type: Boolean, default: true },
+        showprofile: { type: Boolean, default: true },
+        filter: { type: Boolean, default: true },
       },
       youtube: {
         add: { type: Boolean, default: false },
@@ -36,6 +39,9 @@ const userSchema = new mongoose.Schema(
         delete: { type: Boolean, default: false },
         bookmark: { type: Boolean, default: true },
         apply: { type: Boolean, default: true },
+        profile: { type: Boolean, default: true },
+        showprofile: { type: Boolean, default: true },
+        filter: { type: Boolean, default: true },
       },
       contentWriter: {
         add: { type: Boolean, default: false },
@@ -43,6 +49,9 @@ const userSchema = new mongoose.Schema(
         delete: { type: Boolean, default: false },
         bookmark: { type: Boolean, default: true },
         apply: { type: Boolean, default: true },
+        profile: { type: Boolean, default: true },
+        showprofile: { type: Boolean, default: true },
+        filter: { type: Boolean, default: true },
       },
       guestPost: {
         add: { type: Boolean, default: false },
@@ -50,8 +59,13 @@ const userSchema = new mongoose.Schema(
         delete: { type: Boolean, default: false },
         bookmark: { type: Boolean, default: true },
         apply: { type: Boolean, default: true },
+        profile: { type: Boolean, default: true },
+        showprofile: { type: Boolean, default: true },
+        filter: { type: Boolean, default: true },
       },
     },
+    isBookmarked:{ type: Boolean, default: false },
+    userId:{ type: mongoose.Schema.Types.ObjectId },
    /* isBuyed: {
       type: Boolean,
       default: false, // Assuming default is false

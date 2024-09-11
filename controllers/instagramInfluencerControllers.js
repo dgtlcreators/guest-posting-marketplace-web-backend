@@ -126,6 +126,7 @@ module.exports.getInstagraminfluencerById=async(req,res)=>{
 
 module.exports.updateInstagraminfluencer=async(req,res)=>{
     try {
+      //console.log("updateInstagraminfluencer ",req.body)
         //const profilePicture = req.files['profilePicture'] ? req.files['profilePicture'][0].path : null;
   //  const mediaKit = req.files['mediaKit'] ? req.files['mediaKit'][0].path : null;
   //const profilePictureFile = req.files['profilePicture'] ? req.files['profilePicture'][0] : null;
@@ -133,7 +134,7 @@ module.exports.updateInstagraminfluencer=async(req,res)=>{
 
    // const profilePictureUrl = profilePictureFile ? `/uploads/${profilePictureFile.filename}` : 4;
     //const mediaKitUrl = mediaKitFile ? `/uploads/${mediaKitFile.filename}` : null;
-    const { profilePicture, mediaKit, collaborationRates, ...rest } = req.body;
+    const { profilePicture, mediaKit, collaborationRates,isBookmarked, ...rest } = req.body;
     let profilePictureUrl = profilePicture;
     let mediaKitUrl = mediaKit;
 
@@ -150,12 +151,13 @@ module.exports.updateInstagraminfluencer=async(req,res)=>{
       ...req.body,
       //profilePicture:profilePictureUrl,
      // mediaKit:mediaKitUrl,
+     isBookmarked: isBookmarked === true,
      profilePicture: profilePictureUrl,
      mediaKit: mediaKitUrl,
      collaborationRates: {
-       post: Number(collaborationRates.post) || 0,
-       story: Number(collaborationRates.story) || 0,
-       reel: Number(collaborationRates.reel) || 0
+       post: Number(collaborationRates?.post) || 0,
+       story: Number(collaborationRates?.story) || 0,
+       reel: Number(collaborationRates?.reel) || 0
      }
     };
     const instagramInfluencer = await InstagramInfluencer.findByIdAndUpdate(req.params.id, updatedData, { new: true });

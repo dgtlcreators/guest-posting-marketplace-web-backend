@@ -9,7 +9,9 @@ const applicationBrandUserSchema = new mongoose.Schema({
   preferredCollaborationType: String,
   budget: String,
   additionalNotes: String,
-  influencerId:String
+  influencerId:String,
+  isBookmarked:{ type: Boolean, default: false },
+  userId:{ type: mongoose.Schema.Types.ObjectId },
 },{ timestamps: true });
 
 module.exports = mongoose.model('ApplicationBrandUser', applicationBrandUserSchema);

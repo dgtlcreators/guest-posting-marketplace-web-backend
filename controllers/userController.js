@@ -67,10 +67,23 @@ module.exports.loginUser = async (req, res) => {
   try {
     const { email, password } = await req.body;
     //console.log("email, password ",email, password )
+    //console.log("email, password ",email, password )
     const user = await User.findOne({ email });
-   // console.log("user ",user)
-    const isMatch = await bcryptjs.compare(password, user.password);
-   // console.log("isMatch ",isMatch)
+    //console.log("user ",user)
+   
+   // const isMatch = await bcryptjs.compare(password, user.password);
+    const isHashedPassword = user.password.length >= 60; // bcrypt hash length is 60 characters or more
+
+    let isMatch;
+    if (isHashedPassword) {
+     
+      isMatch = await bcryptjs.compare(password, user.password);
+    } else {
+      
+      isMatch = password === user.password;
+    }
+
+    //console.log("isMatch ",isMatch)
     if (!user || !isMatch) {
       return res.status(400).json({ message: "Invalid username or password" });
     }
@@ -145,9 +158,10 @@ module.exports.addUser= async (req, res) => {
 
 module.exports.updateUser=async(req,res)=>{
   try {
+    console.log("req.body ",req.body)
     const updatedData=req.body
     const user = await User.findByIdAndUpdate(req.params.id, updatedData, { new: true });
-
+    console.log("user ",user); 
     
       if (!user) {
           return res.status(404).json({ message: "User not found" });
@@ -159,6 +173,7 @@ module.exports.updateUser=async(req,res)=>{
     res.status(500).json({ message: error.message });
   }
 }
+
 const buildPermissionFilter = (module, action, value) => {
   if (value === false) {
     return {
@@ -176,10 +191,10 @@ module.exports.userFilters = async (req, res) => {
   try {
     const {
       role,
-      instagramAdd, instagramEdit, instagramDelete, instagramBookmark, instagramApply,
-      youtubeAdd, youtubeEdit, youtubeDelete, youtubeBookmark, youtubeApply,
-      contentWriterAdd, contentWriterEdit, contentWriterDelete, contentWriterBookmark, contentWriterApply,
-      guestPostAdd, guestPostEdit, guestPostDelete, guestPostBookmark, guestPostApply
+      instagramAdd, instagramEdit, instagramDelete, instagramBookmark, instagramApply,instagramProfile,instagramShowProfile,instagramFilter,
+      youtubeAdd, youtubeEdit, youtubeDelete, youtubeBookmark, youtubeApply, youtubeProfile,youtubeShowProfile,youtubeFilter,
+      contentWriterAdd, contentWriterEdit, contentWriterDelete, contentWriterBookmark, contentWriterApply, contentWriterProfile,contentWriterShowProfile,contentWriterFilter,
+      guestPostAdd, guestPostEdit, guestPostDelete, guestPostBookmark, guestPostApply, guestPostProfile,guestPostShowProfile,guestPostFilter
     } = req.body;
 
     let filter = {};
@@ -194,21 +209,33 @@ module.exports.userFilters = async (req, res) => {
       ['instagram', 'delete', instagramDelete],
       ['instagram', 'bookmark', instagramBookmark],
       ['instagram', 'apply', instagramApply],
+      ['instagram', 'profile', instagramProfile],
+      ['instagram', 'showprofile', instagramShowProfile],
+      ['instagram', 'filter', instagramFilter],
       ['youtube', 'add', youtubeAdd],
       ['youtube', 'edit', youtubeEdit],
       ['youtube', 'delete', youtubeDelete],
       ['youtube', 'bookmark', youtubeBookmark],
       ['youtube', 'apply', youtubeApply],
+      ['youtube', 'profile', youtubeProfile],
+      ['youtube', 'showprofile', youtubeShowProfile],
+      ['youtube', 'filter', youtubeFilter],
       ['contentWriter', 'add', contentWriterAdd],
       ['contentWriter', 'edit', contentWriterEdit],
       ['contentWriter', 'delete', contentWriterDelete],
       ['contentWriter', 'bookmark', contentWriterBookmark],
       ['contentWriter', 'apply', contentWriterApply],
+      ['contentWriter', 'profile', contentWriterProfile],
+      ['contentWriter', 'showprofile', contentWriterShowProfile],
+      ['contentWriter', 'filter', contentWriterFilter],
       ['guestPost', 'add', guestPostAdd],
       ['guestPost', 'edit', guestPostEdit],
       ['guestPost', 'delete', guestPostDelete],
       ['guestPost', 'bookmark', guestPostBookmark],
       ['guestPost', 'apply', guestPostApply],
+      ['guestPost', 'profile', guestPostProfile],
+      ['guestPost', 'showprofile', guestPostShowProfile],
+      ['guestPost', 'filter', guestPostFilter],
     ];
 
     permissionFields.forEach(([module, action, value]) => {
@@ -230,7 +257,7 @@ module.exports.userFilters = async (req, res) => {
 
 
 
-module.exports.userFilters2=async(req,res)=>{
+/*module.exports.userFilters2=async(req,res)=>{
   try {
     const { name, 
       email, 
@@ -416,7 +443,7 @@ console.log(req.body)
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
+};*/
 
 module.exports.deleteUser=async(req,res)=>{
   try {

@@ -27,7 +27,9 @@ const transactionSchema = new mongoose.Schema({
     type: String,
     enum: ['pending', 'completed', 'failed'],
     default: 'pending'
-  }
+  },
+  isBookmarked:{ type: Boolean, default: false },
+  userId:{ type: mongoose.Schema.Types.ObjectId },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Transaction', transactionSchema);

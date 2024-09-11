@@ -8,6 +8,8 @@ const ApplySchema = new mongoose.Schema({
   phone: { type: String, required: true },
   section: { type: String, required: true }, 
   status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
+  isBookmarked:{ type: Boolean, default: false },
+  userId:{ type: mongoose.Schema.Types.ObjectId },
   createdAt: { type: Date, default: Date.now },
 },{timestamps:true});
 

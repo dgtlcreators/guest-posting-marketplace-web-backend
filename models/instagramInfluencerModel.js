@@ -22,6 +22,8 @@ const instagramInfluencerSchema = new mongoose.Schema({
   },
   pastCollaborations: { type: Array, default: [] },
   mediaKit: { type: String },
+  isBookmarked:{ type: Boolean, default: false },
+  userId:{ type: mongoose.Schema.Types.ObjectId },
   
 },{ timestamps: true });
 

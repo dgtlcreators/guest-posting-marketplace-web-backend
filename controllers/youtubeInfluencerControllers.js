@@ -95,7 +95,8 @@ module.exports.getYoutubeInfluencerById=async(req,res)=>{
 
 module.exports.updateYoutubeInfluencer = async (req, res) => {
   try {
-      const { username, fullname, profilePicture, bio, followersCount, videosCount, engagementRate, averageViews, category, location, language, collaborationRates, pastCollaborations, audienceDemographics, mediaKit } = req.body;
+   // console.log("updateYoutubeInfluencer ",req.body)
+      const { username, fullname, profilePicture, bio, followersCount, videosCount, engagementRate, averageViews, category, location, language, collaborationRates, pastCollaborations, audienceDemographics, mediaKit ,isBookmarked} = req.body;
     //  console.log(req.body);
 
 
@@ -136,7 +137,7 @@ module.exports.updateYoutubeInfluencer = async (req, res) => {
           },
           pastCollaborations: parsedPastCollaborations,
           audienceDemographics: parsedAudienceDemographics,
-          mediaKit: mediaKitUrl,
+          mediaKit: mediaKitUrl,isBookmarked
       };
 
       const youtubeInfluencer = await YoutubeInfluencer.findByIdAndUpdate(req.params.id, updatedData, { new: true });

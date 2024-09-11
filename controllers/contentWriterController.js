@@ -43,7 +43,7 @@ module.exports.getContentWriterById = async (req, res) => {
 };
 
 module.exports.updateContentWriter = async (req, res) => {
-    const { name, bio, experience, expertise,location, languages, collaborationRates,industry,subCategories, email } = req.body;
+    const { name, bio, experience, expertise,location, languages, collaborationRates,industry,subCategories, email,isBookmarked } = req.body;
     try {
       let writer = await ContentWriter.findById(req.params.id);
       if (!writer) return res.status(404).json({ message: 'Writer not found' });
@@ -58,7 +58,7 @@ module.exports.updateContentWriter = async (req, res) => {
       writer.email = email || writer.email;
       writer.industry=industry || writer.industry;
       //writer.subCategories=subCategories || writer.subCategories;
-  
+  writer.isBookmarked=isBookmarked||writer.isBookmarked;
       writer = await writer.save();
       res.json({ message: 'Writer updated successfully', data: writer });
     } catch (err) {

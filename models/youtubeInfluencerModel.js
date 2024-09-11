@@ -25,6 +25,8 @@ const YoutubeInfluencerSchema=new mongoose.Schema({
         geographicDistribution:{type:[String]},
     },
     mediaKit:{type:String},
+    isBookmarked:{ type: Boolean, default: false },
+    userId:{ type: mongoose.Schema.Types.ObjectId },
 },{timestamps:true})
 
 
