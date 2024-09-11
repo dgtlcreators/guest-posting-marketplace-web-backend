@@ -15,7 +15,9 @@ const userActionSchema = new mongoose.Schema({
   timestamp: {
     type: Date,
     default: Date.now
-  }
+  },
+  isBookmarked:{ type: Boolean, default: false },
+  userId:{ type: mongoose.Schema.Types.ObjectId },
 }, { timestamps: true });
 
 module.exports = mongoose.model('UserAction', userActionSchema);

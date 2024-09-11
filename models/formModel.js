@@ -14,6 +14,8 @@ const formDataSchema = new mongoose.Schema({
   DRto: { type: Number, min: 1, max: 100 },
   priceTo: { type: Number, min: 1, max: 100000 },
   userId:{ type: mongoose.Schema.Types.ObjectId },
+  isBookmarked:{ type: Boolean, default: false },
+  userId:{ type: mongoose.Schema.Types.ObjectId },
 
     // url: { type: String },
   // serviceType: { type: String },

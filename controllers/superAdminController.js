@@ -109,12 +109,13 @@ module.exports.getFilteredAdminData = async (req, res) => {
 
 module.exports.updateOneAdminData = async (req, res) => {
   try {
+    //console.log("updateOneAdminData ",req.body)
     const id = req.params.id;
     const userExist = await AdminData.findById(id);
     if (!userExist) {
       return res.status(401).json({ msg: "Admin not found" });
     }
-    console.log("updateOneAdminData ",req.body)
+   // console.log("updateOneAdminData ",req.body)
     const updatedData = await AdminData.findByIdAndUpdate(id, req.body, {
       new: true,
     });

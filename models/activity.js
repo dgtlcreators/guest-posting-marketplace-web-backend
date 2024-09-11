@@ -65,6 +65,7 @@ const activitySchema = new mongoose.Schema({
         type: Apply.schema,
         //required: function() { return this.section === 'Apply'; },
     },
+    isBookmarked:{ type: Boolean, default: false }
 }, { timestamps: true });
 
 

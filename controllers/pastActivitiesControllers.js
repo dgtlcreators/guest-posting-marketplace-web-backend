@@ -182,3 +182,24 @@ module.exports.filterPastActivitiesByUserId=async(req,res)=>{
         });
     }
 }
+
+module.exports.updatePastActivities=async(req,res)=>{
+    try {
+        const updatedData={...req.body}
+        const pastActivities=await Activity.findByIdAndUpdate(req.params.id,updatedData,{new:true})
+        if(!pastActivities) res.status(404).json({message:"PastActivity not found"})
+        res.status(200).json({message:"Past Activity updated successfully",data:pastActivities})
+    } catch (error) {
+        res.status(500).json({message:"Error Past Activity updated successfully",error})
+    }
+}
+
+module.exports.deletePastActivities=async(req,res)=>{
+    try {
+        const pastActivities=await Activity.findByIdAndDelete(req.params.id)
+        if(!pastActivities) res.status(404).json({message:"PastActivity not found"})
+        res.status(200).json({message:"Past Activity deleted successfully",data:pastActivities})
+    } catch (error) {
+        res.status(500).json({message:"Error Past Activity deleted successfully",error})
+    }
+}
