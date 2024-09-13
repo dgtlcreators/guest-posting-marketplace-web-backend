@@ -27,6 +27,7 @@ const connectDB = async () => {
          
            
         });
+        
 
         // Measure the end time for DB connection
         const dbConnectEnd = process.hrtime(dbConnectStart);
