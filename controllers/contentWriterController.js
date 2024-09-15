@@ -44,6 +44,7 @@ module.exports.getContentWriterById = async (req, res) => {
 
 module.exports.updateContentWriter = async (req, res) => {
     const { name, bio, experience, expertise,location, languages, collaborationRates,industry,subCategories, email,isBookmarked } = req.body;
+    //console.log(req.body)
     try {
       let writer = await ContentWriter.findById(req.params.id);
       if (!writer) return res.status(404).json({ message: 'Writer not found' });
@@ -58,7 +59,10 @@ module.exports.updateContentWriter = async (req, res) => {
       writer.email = email || writer.email;
       writer.industry=industry || writer.industry;
       //writer.subCategories=subCategories || writer.subCategories;
-  writer.isBookmarked=isBookmarked||writer.isBookmarked;
+  //writer.isBookmarked=isBookmarked||writer.isBookmarked;
+  writer.isBookmarked = isBookmarked !== undefined ? isBookmarked : writer.isBookmarked; 
+
+ // console.log("isBookmarked ",isBookmarked, writer.isBookmarked)
       writer = await writer.save();
       res.json({ message: 'Writer updated successfully', data: writer });
     } catch (err) {
@@ -334,6 +338,8 @@ module.exports.deleteContentWriter = async (req, res) => {
 */
 
 module.exports.getFilteredContentWriters = async (req, res) => {
+  const formData = Array.isArray(req.body) ? req.body[0] : req.body;
+ 
   const { 
     name, 
     bio, 
@@ -347,7 +353,7 @@ module.exports.getFilteredContentWriters = async (req, res) => {
     industry,
     
     collaborationRates 
-  } = req.body;
+  } = formData//req.body;
 
   try {
     const query = {};

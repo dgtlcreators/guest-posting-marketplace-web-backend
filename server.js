@@ -32,7 +32,9 @@ const userbrandRoutes = require('./routes/userbrandRoute');
 const contentWriterRoute = require('./routes/contentWriterRoute');
 const youtubeInfluencerRoute = require('./routes/youtubeInfluencerRoute');
 const applyRoute = require('./routes/applyRoute');
+const savefilterRoute = require('./routes/saveFilterRoute');
 const pastActivitiesRoute=require("./routes/pastActivitiesRoute")
+const bookmarkRoute=require("./routes/bookmarkRoute.js")
 
 const app = express();
 connectDB();
@@ -44,8 +46,8 @@ app.use(cors({
 /*app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true, 
-}));*/
-
+}));
+*/
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -152,6 +154,8 @@ app.use('/youtubeinfluencers', youtubeInfluencerRoute);
 
 app.use('/userbrand', userbrandRoutes);
 app.use('/applyroute', applyRoute);
+app.use('/savefilterroute', savefilterRoute);
+app.use('/bookmarkroute', bookmarkRoute);
 app.use('/pastactivities', pastActivitiesRoute);
 
 

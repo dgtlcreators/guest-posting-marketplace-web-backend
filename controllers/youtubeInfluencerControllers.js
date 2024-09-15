@@ -23,7 +23,7 @@ module.exports.addYoutubeInfluencer = async (req, res) => {
       collaborationRates = {},
       pastCollaborations = '[]',
       audienceDemographics = {},
-      mediaKit,
+      mediaKit,userId
     } = req.body;
 
     // Parse JSON strings into arrays
@@ -53,7 +53,7 @@ module.exports.addYoutubeInfluencer = async (req, res) => {
       },
       pastCollaborations: parsedPastCollaborations,
       audienceDemographics: parsedAudienceDemographics,
-      mediaKit,
+      mediaKit,userId
     });
 
     await youtubeInfluencer.save();
@@ -170,7 +170,7 @@ module.exports.deleteYoutubeInfluencer=async(req,res)=>{
 
 module.exports.getFilteredYoutubeInfluences=async(req,res)=>{
   try {
-
+    const formData = Array.isArray(req.body) ? req.body[0] : req.body;
     const {
       username,fullname,
       followersCountFrom,followersCountTo,
@@ -183,7 +183,7 @@ module.exports.getFilteredYoutubeInfluences=async(req,res)=>{
       collaborationRates ,
       pastCollaborations ,
       audienceDemographics,
-    } = req.body;
+    } = formData//req.body;
 
     const query = {};
 
