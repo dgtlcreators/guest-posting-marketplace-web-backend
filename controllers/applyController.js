@@ -47,6 +47,35 @@ module.exports.applyAllData = async (req, res) => {
   }
 };
 
+module.exports.updateapplydata=async(req,res)=>{
+  try {
+    const application = await Apply.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+    res.status(200).json({message:"Apply updated successfullly",data:application})
+  } catch (error) {
+    res.status(500).json({message:"Failed to update apply data"})
+  }
+}
+
+module.exports.deleteapplydata=async(req,res)=>{
+  try {
+    const application = await Apply.findByIdAndDelete(req.params.id)
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+    res.status(200).json({message:"Apply deleted successfullly",data:application})
+  } catch (error) {
+    res.status(500).json({message:"Failed to delete apply data"})
+  }
+}
+
 
 
 

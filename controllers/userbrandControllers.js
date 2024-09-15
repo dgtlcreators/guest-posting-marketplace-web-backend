@@ -4,6 +4,88 @@ const Activity = require('../models/activity.js');
 
 
 const filterInstagramInfluencers = async (req, res) => {
+  // Extract the first object from the array in req.body
+ // const formData = req.body[0];
+ const formData = Array.isArray(req.body) ? req.body[0] : req.body;
+
+  
+  //console.log("Received formData:", formData);
+  
+  const {
+    username,
+    fullName,
+    followersCountFrom,
+    followersCountTo,
+    engagementRateFrom,
+    engagementRateTo,
+    category,
+    location,
+    language,
+    verifiedStatus,
+    collaborationRates
+  } = formData ;
+
+  try {
+    const query = {};
+
+    if (username) query.username = { $regex: new RegExp(username, 'i') };
+    if (fullName) query.fullName = { $regex: new RegExp(fullName, 'i') };
+    if (followersCountFrom !== undefined && followersCountFrom !== "") {
+      query.followersCount = { $gte: Number(followersCountFrom) };
+    }
+    if (followersCountTo !== undefined && followersCountTo !== "") {
+      query.followersCount = { ...query.followersCount, $lte: Number(followersCountTo) };
+    }
+    if (engagementRateFrom !== undefined && engagementRateFrom !== "") {
+      query.engagementRate = { $gte: Number(engagementRateFrom) };
+    }
+    if (engagementRateTo !== undefined && engagementRateTo !== "") {
+      query.engagementRate = { ...query.engagementRate, $lte: Number(engagementRateTo) };
+    }
+    if (category) query.category = category;
+    if (location) query.location = location;
+    if (language) query.language = language;
+    if (verifiedStatus !== undefined && verifiedStatus !== "") {
+      query.verifiedStatus = verifiedStatus === "true";
+    }
+
+    if (collaborationRates) {
+      if (collaborationRates.postFrom !== undefined && collaborationRates.postFrom !== "") {
+        query['collaborationRates.post'] = { $gte: Number(collaborationRates.postFrom) };
+      }
+      if (collaborationRates.postTo !== undefined && collaborationRates.postTo !== "") {
+        query['collaborationRates.post'] = { ...query['collaborationRates.post'], $lte: Number(collaborationRates.postTo) };
+      }
+      if (collaborationRates.storyFrom !== undefined && collaborationRates.storyFrom !== "") {
+        query['collaborationRates.story'] = { $gte: Number(collaborationRates.storyFrom) };
+      }
+      if (collaborationRates.storyTo !== undefined && collaborationRates.storyTo !== "") {
+        query['collaborationRates.story'] = { ...query['collaborationRates.story'], $lte: Number(collaborationRates.storyTo) };
+      }
+      if (collaborationRates.reelFrom !== undefined && collaborationRates.reelFrom !== "") {
+        query['collaborationRates.reel'] = { $gte: Number(collaborationRates.reelFrom) };
+      }
+      if (collaborationRates.reelTo !== undefined && collaborationRates.reelTo !== "") {
+        query['collaborationRates.reel'] = { ...query['collaborationRates.reel'], $lte: Number(collaborationRates.reelTo) };
+      }
+    }
+
+   // console.log("Constructed Query:", query);
+
+    // Find influencers based on the constructed query
+    const influencers = await InstagramInfluencerModel.find(query);
+    //console.log("Filtered Influencers:", influencers);
+
+    res.json(influencers);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+const filterInstagramInfluencers1 = async (req, res) => {
+  const formData = req.body[0];
   const { 
     username, 
     fullName,
@@ -18,7 +100,7 @@ const filterInstagramInfluencers = async (req, res) => {
     collaborationRates
   } = req.body;
   //console.log(req.body)
-
+  console.log("Received formData:", formData);
   try {
     const query = {};
 
@@ -45,8 +127,9 @@ const filterInstagramInfluencers = async (req, res) => {
       if (collaborationRates.reelFrom !== undefined && collaborationRates.reelFrom !== "") query['collaborationRates.reel'] = { ...query['collaborationRates.reel'], $gte: Number(collaborationRates.reelFrom) };
       if (collaborationRates.reelTo !== undefined && collaborationRates.reelTo !== "") query['collaborationRates.reel'] = { ...query['collaborationRates.reel'], $lte: Number(collaborationRates.reelTo) };
     }
-
+    console.log("Constructed Query:", query);
     const influencers = await InstagramInfluencerModel.find(query);
+    console.log("Filtered Influencers:", influencers);
     res.json(influencers);
   } catch (error) {
     console.error(error);
@@ -212,7 +295,7 @@ const submitForm = async (req, res) => {
 
 
 
-// Create a new application
+
 const createApplication = async (req, res) => {
   try {
     const application = new ApplicationBrandUser(req.body);
@@ -234,7 +317,7 @@ const appliacationByInfluencerId= async (req, res) => {
   }
 };
 
-// Get all applications
+
 const getAllApplications = async (req, res) => {
   try {
     const applications = await ApplicationBrandUser.find();
@@ -244,7 +327,7 @@ const getAllApplications = async (req, res) => {
   }
 };
 
-// Get a single application by ID
+
 const getApplicationById = async (req, res) => {
   try {
     const application = await ApplicationBrandUser.findById(req.params.id);
@@ -257,7 +340,7 @@ const getApplicationById = async (req, res) => {
   }
 };
 
-// Update an existing application by ID
+
 const updateApplicationById = async (req, res) => {
   try {
     const application = await ApplicationBrandUser.findByIdAndUpdate(
