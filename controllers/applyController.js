@@ -8,7 +8,7 @@ const Activity = require('../models/activity.js');
 
 
 module.exports.applyForm= async (req, res) => {
-  const { userId,publisher, name, email, phone, section } = req.body;
+  const { userId,publisher, name, email, phone, section ,publisherId} = req.body;
 
   const today = new Date().toISOString().split('T')[0]; 
   const applicationsToday = await Apply.countDocuments({
@@ -23,7 +23,7 @@ module.exports.applyForm= async (req, res) => {
   }
 
   const newApplication = new Apply({
-    userId,publisher,
+    userId,publisher,publisherId,
     name,
     email,
     phone,
@@ -32,7 +32,7 @@ module.exports.applyForm= async (req, res) => {
 
   try {
     await newApplication.save();
-    res.status(201).json({message:"Application applied Succesfully",data:newApplication});
+    res.status(201).json({message:`Application applied Succesfully.you have applied ${applicationsToday}`,data:newApplication});
   } catch (error) {
     res.status(500).json({ error: 'Failed to submit application.' });
   }
@@ -75,6 +75,21 @@ module.exports.deleteapplydata=async(req,res)=>{
     res.status(500).json({message:"Failed to delete apply data"})
   }
 }
+
+module.exports.getApplyByPublisherId = async (req, res) => {
+  try {
+    const publisherId = req.params.id//publisherId;
+    const applyData = await Apply.find({ publisherId });
+    
+   // if (!applyData.length) {
+      // res.status(404).json({ msg: "No apply data found for this publisher" });
+//}
+    res.status(200).json({message:"Show apply data successfully",data:applyData});
+  } catch (error) {
+    console.error("Error fetching apply data:", error);
+    res.status(500).json({ error: "Error fetching apply data" });
+  }
+};
 
 
 
@@ -162,19 +177,16 @@ module.exports.getDailyReports = async (req, res) => {
 
 module.exports.getDailyReports1 = async (req, res) => {
   try {
-    const { date } = req.query; // Get date from query parameters
-
-    // Parse the date
-    const startDate = new Date(date);
+    const { date } = req.query; 
     
-    // Set the start date to the beginning of the day (00:00:00)
+    const startDate = new Date(date);
     startDate.setHours(0, 0, 0, 0);
     
-    // Set the end date to the end of the day (23:59:59)
+    
     const endDate = new Date(startDate);
     endDate.setHours(23, 59, 59, 999);
 
-    // Find reports within the given date range
+
     const reports = await Apply.find({
       createdAt: { $gte: startDate, $lte: endDate }
     });
@@ -185,7 +197,7 @@ module.exports.getDailyReports1 = async (req, res) => {
   }
 };
 
-// Generate detailed report
+
 module.exports.generateReport = async (req, res) => {
   try {
     const reports = await Apply.find();
@@ -209,15 +221,12 @@ module.exports.generateReport = async (req, res) => {
   }
 };
 
-// Import data from an Excel file
+
 module.exports.importData = async (req, res) => {
   try {
     const file = req.file.buffer;
     const workbook = xlsx.parse(file);
     const data = workbook[0].data;
-
-    // Process data and import it
-    // ...
 
     res.status(200).json({ message: 'Data imported successfully' });
   } catch (error) {
@@ -225,7 +234,7 @@ module.exports.importData = async (req, res) => {
   }
 };
 
-// Export data to an Excel file
+
 module.exports.exportData = async (req, res) => {
   try {
     const reports = await Apply.find();
