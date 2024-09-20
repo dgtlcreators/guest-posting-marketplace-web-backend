@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const ApplySchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId },
   publisher: { type: mongoose.Schema.Types.ObjectId},
+  publisherId:{ type: mongoose.Schema.Types.ObjectId},
   name: { type: String, required: true },
   email: { type: String, required: true },
   phone: { type: String, required: true },

@@ -16,10 +16,10 @@ module.exports.getAllContentWriters = async (req, res) => {
 
 
 module.exports.createContentWriter = async (req, res) => {
-  const { name, bio, experience, expertise, languages,location, collaborationRates,industry,subCategories, email } = req.body;
+  const { name, bio, experience, expertise, languages,location, collaborationRates,industry,subCategories, wordCount ,gender, email } = req.body;
   try {
     const newWriter = new ContentWriter({ name, bio, experience, expertise, languages,location, collaborationRates,industry,//subCategories
-       email });
+      wordCount ,gender,  email });
     const writer = await newWriter.save();
     res.status(201).json({ message: 'Writer created successfully', data: writer });
   } catch (err) {
@@ -43,7 +43,7 @@ module.exports.getContentWriterById = async (req, res) => {
 };
 
 module.exports.updateContentWriter = async (req, res) => {
-    const { name, bio, experience, expertise,location, languages, collaborationRates,industry,subCategories, email,isBookmarked } = req.body;
+    const { name, bio, experience, expertise,location, languages, collaborationRates,industry,gender,wordCount,subCategories, email,isBookmarked } = req.body;
     //console.log(req.body)
     try {
       let writer = await ContentWriter.findById(req.params.id);
@@ -57,6 +57,8 @@ module.exports.updateContentWriter = async (req, res) => {
       writer.languages = languages || writer.languages;
       writer.collaborationRates = collaborationRates || writer.collaborationRates;
       writer.email = email || writer.email;
+      writer.wordCount=wordCount || writer.wordCount;
+      writer.gender=gender || writer.gender;
       writer.industry=industry || writer.industry;
       //writer.subCategories=subCategories || writer.subCategories;
   //writer.isBookmarked=isBookmarked||writer.isBookmarked;
@@ -351,7 +353,7 @@ module.exports.getFilteredContentWriters = async (req, res) => {
     location,
     languageProficiency,
     industry,
-    
+    gender,wordCountFrom,wordCountTo,
     collaborationRates 
   } = formData//req.body;
 
@@ -363,7 +365,10 @@ module.exports.getFilteredContentWriters = async (req, res) => {
     if (experienceFrom !== undefined && experienceFrom !== "") query.experience = { ...query.experience, $gte: Number(experienceFrom) };
     if (experienceTo !== undefined && experienceTo !== "") query.experience = { ...query.experience, $lte: Number(experienceTo) };
     if (email) query.email = { $regex: new RegExp(email, 'i') };
-
+    if (gender) query.gender = { $regex: new RegExp(gender, 'i') };
+    if (wordCountFrom!== undefined && wordCountFrom !== "") query.wordCount = { ...query.wordCount, $gte: Number(wordCountFrom) };
+    if (wordCountTo !== undefined && wordCountTo !== "") query.wordCount = { ...query.wordCount, $lte: Number(wordCountTo) };
+   
     // Handle expertise filtering with "Add Other"
    /* if (expertise && expertise.length > 0) {
       query.expertise = { 
