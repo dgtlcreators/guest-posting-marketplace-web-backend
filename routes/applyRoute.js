@@ -4,7 +4,7 @@ const router = express.Router();
 
 const {
     applyAllData,applyData,updateapplydata,deleteapplydata,
-    applyForm,generateReport, importData, exportData, getDailyReports,getApplyByPublisherId
+    applyForm,generateReport, importData, exportData, getDailyReports,getApplyByPublisherId,
 } =require("../controllers/applyController.js");
 
 router.get("/applyAllData", applyAllData);
