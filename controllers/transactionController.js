@@ -11,7 +11,7 @@ module.exports.newTransaction  =async (req, res) => {
       currency: 'usd',
     });
 
-    // Save transaction details in the database
+
     const transaction = new Transaction({
       userId,
       itemId,

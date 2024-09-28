@@ -29,7 +29,7 @@ const connectDB = async () => {
         });
         
 
-        // Measure the end time for DB connection
+        
         const dbConnectEnd = process.hrtime(dbConnectStart);
         console.log(`Database connection took ${dbConnectEnd[0]} seconds and ${dbConnectEnd[1] / 1000000} milliseconds`);
 

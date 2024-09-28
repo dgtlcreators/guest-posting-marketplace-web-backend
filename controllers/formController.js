@@ -18,7 +18,7 @@ module.exports.getData = async (req, res) => {
     const response = await AdminData.find({});
     response.forEach(doc => {
       if (doc.isBuyed === undefined) {
-        doc.isBuyed = false; // Set a default value if `isBuyed` is not present
+        doc.isBuyed = false; 
       }
     });
     res

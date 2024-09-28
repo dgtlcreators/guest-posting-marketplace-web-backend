@@ -67,12 +67,12 @@ module.exports.loginUser = async (req, res) => {
   try {
     const { email, password } = await req.body;
     //console.log("email, password ",email, password )
-    //console.log("email, password ",email, password )
+
     const user = await User.findOne({ email });
     //console.log("user ",user)
    
    // const isMatch = await bcryptjs.compare(password, user.password);
-    const isHashedPassword = user.password.length >= 60; // bcrypt hash length is 60 characters or more
+    const isHashedPassword = user.password.length >= 60; 
 
     let isMatch;
     if (isHashedPassword) {
@@ -85,7 +85,7 @@ module.exports.loginUser = async (req, res) => {
 
     //console.log("isMatch ",isMatch)
     if (!user || !isMatch) {
-      return res.status(400).json({ message: "Invalid username or password" });
+      return res.status(400).json({ message: "Invalid email or password" });
     }
     // Set a cookie upon successful login
     

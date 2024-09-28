@@ -32,9 +32,10 @@ const userbrandRoutes = require('./routes/userbrandRoute');
 const contentWriterRoute = require('./routes/contentWriterRoute');
 const youtubeInfluencerRoute = require('./routes/youtubeInfluencerRoute');
 const applyRoute = require('./routes/applyRoute');
+const notificationroute = require('./routes/notificationroute');
 const savefilterRoute = require('./routes/saveFilterRoute');
 const pastActivitiesRoute=require("./routes/pastActivitiesRoute")
-const bookmarkRoute=require("./routes/bookmarkRoute.js")
+const reportroute=require("./routes/reportroute")
 
 const app = express();
 connectDB();
@@ -56,16 +57,9 @@ app.use(express.urlencoded({ extended: true }));
 
 
 
-/*app.get('/complete', async (req, res) => {
-  const result = Promise.all([
-      stripe.checkout.sessions.retrieve(req.query.session_id, { expand: ['payment_intent.payment_method'] }),
-      stripe.checkout.sessions.listLineItems(req.query.session_id)
-  ])
 
-  console.log(JSON.stringify(await result))
 
-  res.send('Your payment was successful')
-})*/
+
 app.get('/complete', async (req, res) => {
   try {
     const { session_id } = req.query;
@@ -155,8 +149,10 @@ app.use('/youtubeinfluencers', youtubeInfluencerRoute);
 
 app.use('/userbrand', userbrandRoutes);
 app.use('/applyroute', applyRoute);
+app.use('/notificationroute', notificationroute);
+app.use('/reportroute', reportroute);
 app.use('/savefilterroute', savefilterRoute);
-app.use('/bookmarkroute', bookmarkRoute);
+
 app.use('/pastactivities', pastActivitiesRoute);
 
 
