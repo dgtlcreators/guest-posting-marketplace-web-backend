@@ -111,9 +111,9 @@ module.exports.applyData = async (req, res) => {
 
 
 
-// Generate a daily report
+// Generate a daily Application
 
-/* actual module.exports.getDailyReports = async (req, res) => {
+/* actual module.exports.getDailyApplications = async (req, res) => {
   try {
     const { date } = req.query; // Get date from query parameters
     const startDate = new Date(date);
@@ -122,30 +122,30 @@ module.exports.applyData = async (req, res) => {
    // endDate.setDate(startDate.getDate() + 1); // Set end date to the start date of the next day
     endDate.setDate(startDate.getDate() );
 
-    const reports = await Apply.find({
+    const applications = await Apply.find({
       createdAt: { $gte: startDate, $lt: endDate }
     });
 
-    res.json(reports);
+    res.json(applications);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to get daily reports' });
+    res.status(500).json({ error: 'Failed to get daily applications' });
   }
 };*/
 
-/*module.exports.getDailyReports = async (req, res) => {
+/*module.exports.getDailyApplications = async (req, res) => {
   try {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const reports = await Apply.find({ createdAt: { $gte: today } });
-    res.json(reports);
+    const applications = await Apply.find({ createdAt: { $gte: today } });
+    res.json(applications);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to get daily reports' });
+    res.status(500).json({ error: 'Failed to get daily applications' });
   }
 };*/
 // src/controllers/applyController.js
 
-module.exports.getDailyReports = async (req, res) => {
+module.exports.getDailyApplications = async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
 
@@ -163,9 +163,9 @@ module.exports.getDailyReports = async (req, res) => {
     }
 //console.log(startDate,endDate,dateFilters)
     // Fetch filtered data
-    const reports = await Apply.find(dateFilters);
+    const applications = await Apply.find(dateFilters);
     
-    res.status(200).json(reports);
+    res.status(200).json(applications);
   } catch (error) {
     res.status(500).json({ error: 'Failed to get all application data' });
   }
@@ -175,7 +175,7 @@ module.exports.getDailyReports = async (req, res) => {
 
 
 
-module.exports.getDailyReports1 = async (req, res) => {
+module.exports.getDailyApplications1 = async (req, res) => {
   try {
     const { date } = req.query; 
     
@@ -187,37 +187,37 @@ module.exports.getDailyReports1 = async (req, res) => {
     endDate.setHours(23, 59, 59, 999);
 
 
-    const reports = await Apply.find({
+    const applications = await Apply.find({
       createdAt: { $gte: startDate, $lte: endDate }
     });
 
-    res.json(reports);
+    res.json(applications);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to get daily reports' });
+    res.status(500).json({ error: 'Failed to get daily applications' });
   }
 };
 
 
-module.exports.generateReport = async (req, res) => {
+module.exports.generateApplication = async (req, res) => {
   try {
-    const reports = await Apply.find();
-    const data = reports.map(report => ({
-      'User ID': report.userId,
-      'Publisher': report.publisher,
-      'Name': report.name,
-      'Email': report.email,
-      'Phone': report.phone,
-      'Section': report.section,
-      'Status': report.status,
-      'Created At': report.createdAt,
+    const applications = await Apply.find();
+    const data = applications.map(Application => ({
+      'User ID': Application.userId,
+      'Publisher': Application.publisher,
+      'Name': Application.name,
+      'Email': Application.email,
+      'Phone': Application.phone,
+      'Section': Application.section,
+      'Status': Application.status,
+      'Created At': Application.createdAt,
     }));
 
-    const buffer = xlsx.build([{ name: 'Reports', data: [Object.keys(data[0]), ...data.map(Object.values)] }]);
-    fs.writeFileSync('report.xlsx', buffer);
+    const buffer = xlsx.build([{ name: 'Applications', data: [Object.keys(data[0]), ...data.map(Object.values)] }]);
+    fs.writeFileSync('Application.xlsx', buffer);
     
-    res.download('report.xlsx', 'report.xlsx');
+    res.download('Application.xlsx', 'Application.xlsx');
   } catch (error) {
-    res.status(500).json({ error: 'Failed to generate report' });
+    res.status(500).json({ error: 'Failed to generate Application' });
   }
 };
 
@@ -237,16 +237,16 @@ module.exports.importData = async (req, res) => {
 
 module.exports.exportData = async (req, res) => {
   try {
-    const reports = await Apply.find();
-    const data = reports.map(report => ({
-      'User ID': report.userId,
-      'Publisher': report.publisher,
-      'Name': report.name,
-      'Email': report.email,
-      'Phone': report.phone,
-      'Section': report.section,
-      'Status': report.status,
-      'Created At': report.createdAt,
+    const applications = await Apply.find();
+    const data = applications.map(Application => ({
+      'User ID': Application.userId,
+      'Publisher': Application.publisher,
+      'Name': Application.name,
+      'Email': Application.email,
+      'Phone': Application.phone,
+      'Section': Application.section,
+      'Status': Application.status,
+      'Created At': Application.createdAt,
     }));
 
     const buffer = xlsx.build([{ name: 'Data Export', data: [Object.keys(data[0]), ...data.map(Object.values)] }]);
