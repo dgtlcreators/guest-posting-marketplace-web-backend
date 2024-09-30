@@ -87,3 +87,30 @@ exports.deletereport = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
+
+
+module.exports.getDailyReports = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+
+    
+    const dateFilters = {};
+    if (startDate) {
+      const start = new Date(startDate);
+      start.setHours(0, 0, 0, 0);
+      dateFilters.createdAt = { $gte: start };
+    }
+    if (endDate) {
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999);
+      dateFilters.createdAt = { ...dateFilters.createdAt, $lte: end };
+    }
+//console.log(startDate,endDate,dateFilters)
+  
+    const applications = await Report.find(dateFilters);
+    
+    res.status(200).json(applications);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get all application data' });
+  }
+};
