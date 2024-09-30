@@ -4,7 +4,7 @@ const reportSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId },
     
     publisherId:{ type: mongoose.Schema.Types.ObjectId},
-    section: { type: String, required: true }, 
+    section: { type: String }, 
     status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
     isSeen: { type: Boolean, default: false },
     isBookmarked:{ type: Boolean, default: false },

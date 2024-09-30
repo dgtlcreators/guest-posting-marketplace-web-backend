@@ -107,9 +107,11 @@ module.exports.getDailyReports = async (req, res) => {
     }
 //console.log(startDate,endDate,dateFilters)
   
+//console.log("Date Filters:", dateFilters);
     const applications = await Report.find(dateFilters);
+    //console.log(applications)
     
-    res.status(200).json(applications);
+    res.status(200).json({message:"Getting report data",data:applications});
   } catch (error) {
     res.status(500).json({ error: 'Failed to get all application data' });
   }

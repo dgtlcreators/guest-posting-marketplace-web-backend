@@ -39,11 +39,11 @@ const reportroute=require("./routes/reportroute")
 
 const app = express();
 connectDB();
-
 app.use(cors({
   origin: 'https://guest-posting-marketplace-web.netlify.app',
   credentials: true  
 }));
+
 /*
 app.use(cors({
   origin: 'http://localhost:3000',
@@ -110,7 +110,7 @@ const User = require('./models/userModel');
 
 
 
-
+/* this is usefull
 app.post('/create-payment-intent', async (req, res) => {
   const { price } = req.body;
 
@@ -131,7 +131,7 @@ app.post('/create-payment-intent', async (req, res) => {
       },
     });
   }
-});
+});*/
 
 
 
