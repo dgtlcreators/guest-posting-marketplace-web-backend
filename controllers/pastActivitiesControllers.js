@@ -11,6 +11,75 @@ async function getUserDetails(userId) {
         return null;
     }
 }
+module.exports.createPastActivities1 = async (req, res) => {
+    try {
+        const { userId, action, section, role, details } = req.body;
+
+        const user = await getUserDetails(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const today = new Date();
+        const dateKey = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+        // Convert details to a string for comparison
+        const detailsString = JSON.stringify(details);
+
+        // Check for existing activity with the same userId, action, section, and same day
+        const existingActivity = await Activity.findOne({
+            userId,
+            action,
+            section,
+            role,
+            createdAt: { $gte: dateKey, $lt: new Date(dateKey.getTime() + 86400000) }, 
+        });
+
+        if (existingActivity) {
+            // Update the existing activity's updatedAt and details
+            existingActivity.updatedAt = new Date(); // Set to the current timestamp
+            existingActivity.details = detailsString; // Update details
+            await existingActivity.save();
+
+            return res.status(200).json({
+                message: 'Activity updated successfully',
+                data: existingActivity,
+            });
+        }
+
+        // If no existing activity, create a new one
+        const activity = new Activity({
+            userId,
+            user: {
+                name: user.name,
+                email: user.email,
+                role: user.role,
+            },
+            action,
+            section,
+            details: detailsString, // Save as a string
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        });
+
+        await activity.save();
+
+        res.status(201).json({
+            message: 'Activity created successfully',
+            data: activity,
+        });
+    } catch (error) {
+        console.error('Error saving activity:', error.message, error.stack);
+        res.status(500).json({
+            message: 'Failed to create activity',
+            error: error.message,
+        });
+    }
+};
+
+
+
+
 
 
 
@@ -26,6 +95,29 @@ module.exports.createPastActivities = async (req, res) => {
             });
         }
 
+      /*  const today = new Date();
+        const dateKey = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+
+        const existingActivity = await Activity.findOne({
+            userId,
+            date: { $gte: dateKey, $lt: new Date(dateKey.getTime() + 86400000) }, 
+        });
+
+        if (existingActivity) {
+         
+            existingActivity.action = action;
+            existingActivity.details = details;
+            existingActivity.updatedAt = new Date(); 
+            
+            await existingActivity.save();
+
+            return res.status(200).json({
+                message: 'Activity updated successfully',
+                data: existingActivity,
+            });
+        }*/
+
         const activity = new Activity({
             userId,
             user: {
@@ -36,6 +128,7 @@ module.exports.createPastActivities = async (req, res) => {
             action,
             section,
             details,
+         //  date: dateKey, 
         });
 
         await activity.save();
