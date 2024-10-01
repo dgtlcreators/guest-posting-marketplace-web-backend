@@ -116,3 +116,9 @@ module.exports.getDailyReports = async (req, res) => {
     res.status(500).json({ error: 'Failed to get all application data' });
   }
 };
+
+module.exports.checkReport=async (req, res) => {
+  const { userId, publisherId } = req.query;
+  const report = await Report.findOne({ userId, publisherId });
+  res.json({ hasReported: !!report });
+}

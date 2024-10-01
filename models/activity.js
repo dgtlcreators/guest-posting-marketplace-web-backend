@@ -42,6 +42,10 @@ const activitySchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    date: { 
+        type: Date,
+        //required: true,
+    },
     details: {
         type: mongoose.Schema.Types.Mixed,
     },
