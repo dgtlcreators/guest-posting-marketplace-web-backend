@@ -22,6 +22,11 @@ module.exports.applyForm= async (req, res) => {
     return res.status(400).json({ error: 'You have reached the application limit for today.' });
   }
 
+  const existingApplication = await Apply.findOne({ email });
+  if (existingApplication) {
+    return res.status(400).json({error: 'An application with this email already exists.' });
+  }
+
   const newApplication = new Apply({
     userId,publisher,publisherId,
     name,

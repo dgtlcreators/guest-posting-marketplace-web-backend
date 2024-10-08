@@ -17,6 +17,10 @@ module.exports.getAllContentWriters = async (req, res) => {
 
 module.exports.createContentWriter = async (req, res) => {
   const { name, bio, experience, expertise, languages,location, collaborationRates,industry,subCategories, wordCount ,gender, email } = req.body;
+  if (!email) {
+  //  return res.status(400).json({ message: 'Email is required' });
+  }
+ 
   try {
     const newWriter = new ContentWriter({ name, bio, experience, expertise, languages,location, collaborationRates,industry,//subCategories
       wordCount ,gender,  email });

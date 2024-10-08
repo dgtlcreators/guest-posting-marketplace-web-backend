@@ -25,6 +25,7 @@ module.exports.addYoutubeInfluencer = async (req, res) => {
       audienceDemographics = {},
       mediaKit,userId
     } = req.body;
+    console.log("Req body: ",req.body)
 
     // Parse JSON strings into arrays
     const parsedPastCollaborations = JSON.parse(pastCollaborations);

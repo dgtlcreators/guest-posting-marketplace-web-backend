@@ -7,10 +7,55 @@ const Activity = require('../models/activity.js');
 const path = require('path');
 
 module.exports.addInstagraminfluencer = async (req, res) => {
+  try {
+      const { profilePicture, mediaKit, collaborationRates, ...rest } = req.body;
+      let profilePictureUrl = profilePicture;
+      let mediaKitUrl = mediaKit;
+
+      console.log("req.body: ", req.body);
+      console.log("req.files: ", req.files);
+
+      if (req.files) {
+          const profilePictureFile = req.files['profilePicture'] ? req.files['profilePicture'][0] : null;
+          const mediaKitFile = req.files['mediaKit'] ? req.files['mediaKit'][0] : null;
+
+          profilePictureUrl = profilePictureFile ? `/uploads/${profilePictureFile.filename}` : profilePictureUrl;
+          mediaKitUrl = mediaKitFile ? `/uploads/${mediaKitFile.filename}` : mediaKitUrl;
+      }
+
+      // Parse collaborationRates if it exists
+      let parsedCollaborationRates = {};
+      if (collaborationRates) {
+          parsedCollaborationRates = JSON.parse(collaborationRates);
+      }
+
+      const instagramInfluencer = new InstagramInfluencer({
+          ...rest,
+          profilePicture: profilePictureUrl,
+          mediaKit: mediaKitUrl,
+          collaborationRates: {
+              post: Number(parsedCollaborationRates.post) || 0,
+              story: Number(parsedCollaborationRates.story) || 0,
+              reel: Number(parsedCollaborationRates.reel) || 0
+          }
+      });
+
+      await instagramInfluencer.save();
+      res.status(201).json({ instagramInfluencer, message: "Instagram Influencer added Successfully" });
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
+};
+
+
+module.exports.addInstagraminfluencer1 = async (req, res) => {
     try {
       const { profilePicture, mediaKit, collaborationRates, ...rest } = req.body;
       let profilePictureUrl = profilePicture;
       let mediaKitUrl = mediaKit;
+      console.log("req.body: ", req.body);
+console.log("req.files: ", req.files);
+
   
       if (req.files) {
         const profilePictureFile = req.files['profilePicture'] ? req.files['profilePicture'][0] : null;
@@ -25,9 +70,9 @@ module.exports.addInstagraminfluencer = async (req, res) => {
         profilePicture: profilePictureUrl,
         mediaKit: mediaKitUrl,
         collaborationRates: {
-          post: Number(collaborationRates.post) || 0,
-          story: Number(collaborationRates.story) || 0,
-          reel: Number(collaborationRates.reel) || 0
+          post: Number(collaborationRates?.post) || 0,
+          story: Number(collaborationRates?.story) || 0,
+          reel: Number(collaborationRates?.reel) || 0
         }
       });
 
@@ -185,6 +230,7 @@ module.exports.updateInstagraminfluencer=async(req,res)=>{
 
 module.exports.deleteInstagraminfluencer=async(req,res)=>{
     try {
+      console.log("req.params.id ",req.params.id)
         const instagramInfluencer=await InstagramInfluencer.findByIdAndDelete(req.params.id)
         if(!instagramInfluencer) return res.status(404).json({message:"Instagram Influencer not found"})
         
