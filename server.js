@@ -21,6 +21,9 @@ const path = require('path');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 console.log(process.env.STRIPE_SECRET_KEY)
 
+
+const PDFDocument = require('pdfkit');
+
 const userRoute=require("./routes/userRoute")
 const formRoute=require("./routes/formRoute")
 const adminRoute=require("./routes/adminRoute")
@@ -185,5 +188,20 @@ app.get("/", (req, res) => {
   app.use('/files', fileRoutes);
   
   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
+
+  app.get('/convert-to-pdf', (req, res) => {
+    const imagePath = 'path/to/your/image.png'; // Path to your PNG image
+    const pdfPath = 'path/to/save/converted.pdf'; // Path to save the PDF
+  
+    const doc = new PDFDocument();
+    doc.pipe(fs.createWriteStream(pdfPath));
+    doc.image(imagePath, 0, 0, { width: 600 });
+    doc.end();
+  
+    // Send the PDF file to the client
+    res.download(pdfPath, 'MediaKit.pdf');
+  });
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

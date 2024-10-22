@@ -27,9 +27,9 @@ exports.getreportbyid = async (req, res) => {
   }
 };
 
-// Create a new report
+
 exports.createreport = async (req, res) => {
-  console.log("Incoming report data:", req.body); // Log the incoming data
+//  console.log("Incoming report data:", req.body); 
 
   const { userId, publisherId, section, reportType, reason, details } = req.body;
 
