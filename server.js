@@ -54,10 +54,30 @@ app.use(cors({
   credentials: true, 
 }));
 */
+/*
 const allowedOrigins = [
   'https://guest-posting-marketplace.netlify.app',
   'https://guest-posting-marketplace-web.netlify.app',
   'http://localhost:3000', 
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
+*/
+
+const allowedOrigins = [
+  'https://guest-posting-marketplace.netlify.app',
+  'https://guest-posting-marketplace-web.netlify.app',
+  'http://localhost:3000',
 ];
 
 app.use(cors({
