@@ -26,6 +26,8 @@ const userSchema = new mongoose.Schema(
       default: "Brand User",
       index: true 
     },
+    verificationToken: {type: String,default:null},
+    isVerified: { type: Boolean, default: false },
     permissions: {
       instagram: {
         add: { type: Boolean, default: false },

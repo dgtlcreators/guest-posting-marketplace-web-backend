@@ -198,6 +198,68 @@ app.use('/savefilterroute', savefilterRoute);
 
 app.use('/pastactivities', pastActivitiesRoute);
 
+app.get("/verify", async (req, res) => {
+  const { token, email } = req.query;
+  const user = await User.findOne({ email });
+
+  if (!user) {
+      return res.status(400).send(`
+          <html>
+              <head>
+                  <title>Error</title>
+              </head>
+              <body>
+                  <h2>User not found</h2>
+                  <p>The user associated with this email was not found.</p>
+              </body>
+          </html>
+      `);
+  }
+
+  if (user.isVerified) {
+      return res.status(400).send(`
+          <html>
+              <head>
+                  <title>Email Already Verified</title>
+              </head>
+              <body>
+                  <h2>Email Already Verified</h2>
+                  <p>This email has already been verified. You can now log in.</p>
+              </body>
+          </html>
+      `);
+  }
+
+  if (user.verificationToken !== token) {
+      return res.status(400).send(`
+          <html>
+              <head>
+                  <title>Invalid Token</title>
+              </head>
+              <body>
+                  <h2>Invalid Verification Token</h2>
+                  <p>The token provided is invalid or has expired.</p>
+              </body>
+          </html>
+      `);
+  }
+
+  user.isVerified = true;
+  user.verificationToken = null; // Invalidate the token
+  await user.save();
+
+  res.send(`
+      <html>
+          <head>
+              <title>Email Verified</title>
+          </head>
+          <body>
+              <h2>Email Verified Successfully!</h2>
+              <p>You can now log in.</p>
+          </body>
+      </html>
+  `);
+});
 
 
 app.use("/transaction",transactionRoute);
