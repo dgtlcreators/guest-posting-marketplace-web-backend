@@ -47,10 +47,12 @@ const sendVerificationEmail = async (email, verificationToken) => {
   sendSmtpEmail.to = [{ email }];
   sendSmtpEmail.sender = { name: "CreatorXChange", email: "myfromemail@mycompany.com" };
   sendSmtpEmail.subject = "Email Verification - CreatorXChange";
+  const frontendUrl="https://guest-posting-marketplace-web.netlify.app"
+   // const frontendUrl="http://localhost:3000"
   sendSmtpEmail.htmlContent = `
     <h2>Welcome to CreatorXChange!</h2>
     <p>Please verify your email by clicking the link below:</p>
-    <a href="http://your-frontend-url.com/verify?token=${verificationToken}&email=${email}">Verify Email</a>
+    <a href="${frontendUrl}/verify?token=${verificationToken}&email=${email}">Verify Email</a>
   `;
 
   try {
