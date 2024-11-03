@@ -245,7 +245,7 @@ app.get("/verify", async (req, res) => {
   }
 
   user.isVerified = true;
-  user.verificationToken = null; // Invalidate the token
+  user.verificationToken = null; 
   await user.save();
 
   res.send(`
