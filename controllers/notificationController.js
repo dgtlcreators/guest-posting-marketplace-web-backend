@@ -33,8 +33,57 @@ module.exports.getNotificationById = async (req, res) => {
     }
 };
 
-
 module.exports.createNotifications = async (req, res) => {
+    try {
+ 
+        await Notification.deleteMany({ userStatus: { $size: 0 } });
+
+  
+        const admins = await User.find({ role: { $in: ["Admin", "Super Admin"] } });
+
+        const userStatus = [];
+
+      
+        const user = await User.findById(req.body.userId); 
+
+    
+        if (user && user.role !== "Admin" && user.role !== "Super Admin") {
+            userStatus.push({
+                userId: req.body.userId,
+                isSeen: false,
+                isBookmarked: false,
+            });
+        }
+
+
+        admins.forEach(admin => {
+            userStatus.push({
+                userId: admin._id,
+                isSeen: false,
+                isBookmarked: false,
+            });
+        });
+
+       
+        const notification = new Notification({
+            ...req.body,
+            userStatus 
+        });
+
+      
+        await notification.save();
+        res.status(201).json({
+            success: true,
+            message: 'Notification created successfully',
+            data: notification
+        });
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+    }
+};
+
+
+module.exports.createNotifications1 = async (req, res) => {
    
     try {
         await Notification.deleteMany({ userStatus: { $size: 0 } });
