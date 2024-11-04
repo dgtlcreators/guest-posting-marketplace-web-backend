@@ -68,7 +68,12 @@ const ContentWriterSchema = new mongoose.Schema({
     type: [LanguageSchema],
     
   },
-  location: { type: String },
+ // location: { type: String },
+ location: {
+  country: { type: String },
+  state: { type: String },
+  city: { type: String },
+},
   collaborationRates: {
     post: { type: Number,  },
     story: { type: Number, },

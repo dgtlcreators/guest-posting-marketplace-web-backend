@@ -12,7 +12,12 @@ const instagramInfluencerSchema = new mongoose.Schema({
   averageLikes: { type: Number, default: 0 },
   averageComments: { type: Number, default: 0 },
   category: { type: String },
-  location: { type: String },
+  location: {
+    country: { type: String },
+    state: { type: String },
+    city: { type: String },
+  },
+  //location: { type: String },
   language: { type: String },
   verifiedStatus: { type: Boolean, default: false },
   collaborationRates: {

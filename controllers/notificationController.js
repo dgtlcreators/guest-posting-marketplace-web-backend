@@ -177,8 +177,8 @@ module.exports.updateNotificationsUser = async (req, res) => {
 
 module.exports.deleteNotificationUser = async (req, res) => {
     const { id, userId } = req.params; // Get both notification ID and user ID
-    console.log("Notification ID: ", id);
-    console.log("User ID: ", userId);
+   // console.log("Notification ID: ", id);
+  //  console.log("User ID: ", userId);
 
     try {
         const updatedNotification = await Notification.findOneAndUpdate(
@@ -187,7 +187,7 @@ module.exports.deleteNotificationUser = async (req, res) => {
             { new: true }
         );
 
-        console.log("Updated Notification: ", updatedNotification);
+      //  console.log("Updated Notification: ", updatedNotification);
 
         if (!updatedNotification) {
             return res.status(404).json({ success: false, message: 'Notification not found' });

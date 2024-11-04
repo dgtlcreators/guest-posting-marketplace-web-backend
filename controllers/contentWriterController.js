@@ -445,7 +445,12 @@ module.exports.getFilteredContentWriters = async (req, res) => {
       };
     }
 
-    if (location) query.location = location;
+   // if (location) query.location = location;
+   if (location) {
+    if (location.country) query['location.country'] = { $regex: new RegExp(location.country, 'i') };
+    if (location.state) query['location.state'] = { $regex: new RegExp(location.state, 'i') };
+    if (location.city) query['location.city'] = { $regex: new RegExp(location.city, 'i') };
+  }
 
     if (industry && industry.length > 0) {
       query.industry = {

@@ -43,7 +43,12 @@ const filterInstagramInfluencers = async (req, res) => {
       query.engagementRate = { ...query.engagementRate, $lte: Number(engagementRateTo) };
     }
     if (category) query.category = category;
-    if (location) query.location = location;
+    //if (location) query.location = location;
+    if (location) {
+      if (location.country) query['location.country'] = { $regex: new RegExp(location.country, 'i') };
+      if (location.state) query['location.state'] = { $regex: new RegExp(location.state, 'i') };
+      if (location.city) query['location.city'] = { $regex: new RegExp(location.city, 'i') };
+    }
     if (language) query.language = language;
     if (verifiedStatus !== undefined && verifiedStatus !== "") {
       query.verifiedStatus = verifiedStatus === "true";

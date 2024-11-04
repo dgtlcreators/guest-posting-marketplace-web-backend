@@ -48,7 +48,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
   sendSmtpEmail.sender = { name: "CreatorXChange", email: "myfromemail@mycompany.com" };
   sendSmtpEmail.subject = "Email Verification - CreatorXChange";
   const frontendUrl="https://guest-posting-marketplace-web-backend-1.onrender.com"
-  //  const frontendUrl="http://localhost:5000"
+  // const frontendUrl="http://localhost:5000"
   sendSmtpEmail.htmlContent = `
     <h2>Welcome to CreatorXChange!</h2>
     <p>Please verify your email by clicking the link below:</p>

@@ -48,13 +48,13 @@ const sendVerificationEmail = async (email, verificationToken) => {
   sendSmtpEmail.sender = { name: "CreatorXChange", email: "myfromemail@mycompany.com" };
   sendSmtpEmail.subject = "Email Verification - CreatorXChange";
   const frontendUrl="https://guest-posting-marketplace-web-backend-1.onrender.com"
-  //  const frontendUrl="http://localhost:5000"
+ //   const frontendUrl="http://localhost:5000"
   sendSmtpEmail.htmlContent = `
     <h2>Welcome to CreatorXChange!</h2>
     <p>Please verify your email by clicking the link below:</p>
     <a href="${frontendUrl}/verify?token=${verificationToken}&email=${email}">Verify Email</a>
   `;
-
+  
   try {
     await apiInstance.sendTransacEmail(sendSmtpEmail);
     console.log('Verification email sent successfully');
@@ -67,19 +67,20 @@ module.exports.signupUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
-   
+
     const user = await User.findOne({ email });
     if (user) {
+    
       return res.status(400).json({ message: "User already exists" });
     }
-
    
+ 
     const hashPassword = await bcryptjs.hash(password, 10);
 
 
     const verificationToken = crypto.randomBytes(32).toString('hex');
 
-
+   
     const newUser = await User.create({
       name,
       email,
@@ -88,10 +89,10 @@ module.exports.signupUser = async (req, res) => {
       verificationToken 
     });
 
-
+  
     await sendVerificationEmail(email, verificationToken);
 
-   
+
     res.status(200).json({
       message: "User created successfully. Please check your email to verify your account.",
       success: true,
@@ -144,10 +145,15 @@ module.exports.loginUser = async (req, res) => {
 
     const user = await User.findOne({ email });
     //console.log("user ",user)
-   
-   // const isMatch = await bcryptjs.compare(password, user.password);
-    const isHashedPassword = user.password.length >= 60; 
+  
+    if (!user) {
+ 
+      return res.status(404).json({ message: "User not found" });
+    }
 
+   // const isMatch = await bcryptjs.compare(password, user.password);
+    const isHashedPassword = user?.password.length >= 60; 
+   
     let isMatch;
     if (isHashedPassword) {
      
@@ -159,10 +165,11 @@ module.exports.loginUser = async (req, res) => {
 
     //console.log("isMatch ",isMatch)
     if (!user || !isMatch) {
+  
       return res.status(400).json({ message: "Invalid email or password" });
     }
-    // Set a cookie upon successful login
     
+
     const token = jwt.sign({ email: user.email }, "jwt-secret", {
       expiresIn: "300",
     });

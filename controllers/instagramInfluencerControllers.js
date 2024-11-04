@@ -23,7 +23,7 @@ module.exports.addInstagraminfluencer = async (req, res) => {
           mediaKitUrl = mediaKitFile ? `/uploads/${mediaKitFile.filename}` : mediaKitUrl;
       }
 
-      // Parse collaborationRates if it exists
+      
       let parsedCollaborationRates = {};
       if (collaborationRates) {
           parsedCollaborationRates = JSON.parse(collaborationRates);
