@@ -39,6 +39,7 @@ const notificationroute = require('./routes/notificationroute');
 const savefilterRoute = require('./routes/saveFilterRoute');
 const pastActivitiesRoute=require("./routes/pastActivitiesRoute")
 const reportroute=require("./routes/reportroute")
+const locationRoute=require("./routes/locationroute")
 
 const app = express();
 connectDB();
@@ -94,6 +95,7 @@ app.use(cors({
 
 
 
+app.use(express.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //app.use(bodyParser.urlencoded({ extended: true }));
@@ -195,6 +197,8 @@ app.use('/applyroute', applyRoute);
 app.use('/notificationroute', notificationroute);
 app.use('/reportroute', reportroute);
 app.use('/savefilterroute', savefilterRoute);
+
+app.use('/locationroute', locationRoute);
 
 app.use('/pastactivities', pastActivitiesRoute);
 
