@@ -5,10 +5,92 @@ const Activity = require('../models/activity.js');
 
 
 const path = require('path');
-
 module.exports.addInstagraminfluencer = async (req, res) => {
   try {
-      const { profilePicture, mediaKit, collaborationRates, ...rest } = req.body;
+     
+      const { location = '', profilePicture, mediaKit, collaborationRates, ...rest } = req.body;
+      let profilePictureUrl = profilePicture;
+      let mediaKitUrl = mediaKit;
+
+      console.log("req.body: ", req.body); 
+      console.log("req.files: ", req.files);
+
+   
+     
+
+      console.log("Before location: ",location)
+      let parsedLocation = {};
+
+      if (location) {
+          try {
+              if (typeof location === 'string') {
+                  // Try parsing the location if it's a string
+                  parsedLocation = JSON.parse(location);
+                  console.log("Parsed location from string:", parsedLocation);
+              } else if (typeof location === 'object') {
+                  // If location is already an object, use it as is
+                  parsedLocation = location;
+                  console.log("Using location as object:", parsedLocation);
+              }
+          } catch (err) {
+              console.error("Error parsing location:", err);
+              // In case of error, set parsedLocation to an empty object
+              parsedLocation = {};
+          }
+      } else {
+          console.log("Location not provided or is empty");
+      }
+      
+          //const parsedLocation = typeof location === 'string' ? JSON.parse(location) : location;
+
+      // Handle file uploads
+      if (req.files) {
+          const profilePictureFile = req.files['profilePicture'] ? req.files['profilePicture'][0] : null;
+          const mediaKitFile = req.files['mediaKit'] ? req.files['mediaKit'][0] : null;
+
+          profilePictureUrl = profilePictureFile ? `/uploads/${profilePictureFile.filename}` : profilePictureUrl;
+          mediaKitUrl = mediaKitFile ? `/uploads/${mediaKitFile.filename}` : mediaKitUrl;
+      }
+
+      // Parse collaborationRates if it's a string
+      let parsedCollaborationRates = {};
+      if (collaborationRates) {
+          if (typeof collaborationRates === 'string') {
+              parsedCollaborationRates = JSON.parse(collaborationRates);
+          } else {
+              parsedCollaborationRates = collaborationRates || {};  // Handle undefined or empty cases
+          }
+      }
+
+      // Create the InstagramInfluencer object
+      const instagramInfluencer = new InstagramInfluencer({
+          ...rest,
+          location: parsedLocation,  // Store parsed location here
+          profilePicture: profilePictureUrl,
+          mediaKit: mediaKitUrl,
+          collaborationRates: {
+              post: Number(parsedCollaborationRates.post) || 0,
+              story: Number(parsedCollaborationRates.story) || 0,
+              reel: Number(parsedCollaborationRates.reel) || 0
+          }
+      });
+
+      // Save the influencer to the database
+      await instagramInfluencer.save();
+
+      res.status(201).json({ instagramInfluencer, message: "Instagram Influencer added Successfully" });
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
+};
+
+
+
+
+
+module.exports.addInstagraminfluencer11 = async (req, res) => {
+  try {
+      const {  location= {},profilePicture, mediaKit, collaborationRates, ...rest } = req.body;
       let profilePictureUrl = profilePicture;
       let mediaKitUrl = mediaKit;
 
@@ -26,11 +108,33 @@ module.exports.addInstagraminfluencer = async (req, res) => {
       
       let parsedCollaborationRates = {};
       if (collaborationRates) {
-          parsedCollaborationRates = JSON.parse(collaborationRates);
+          if (typeof collaborationRates === 'string') {
+              parsedCollaborationRates = JSON.parse(collaborationRates);
+          } else {
+              parsedCollaborationRates = collaborationRates || {}; 
+          }
       }
+      let parsedLocation = {};
+      if (location) {
+          try {
+              // Try to clean and parse the location string
+              let locationString = location.trim();
 
+              // Manually fix the malformed string if necessary
+              if (locationString.startsWith('{') && locationString.endsWith('}')) {
+                  // Ensure keys are quoted and try parsing again
+                  locationString = locationString.replace(/(\w+):/g, '"$1":');
+                  parsedLocation = JSON.parse(locationString);
+              }
+          } catch (err) {
+              console.log("Error parsing location:", err);
+              // Handle the case where location format is invalid
+              parsedLocation = {};
+          }
+      }
       const instagramInfluencer = new InstagramInfluencer({
           ...rest,
+          location: parsedLocation,
           profilePicture: profilePictureUrl,
           mediaKit: mediaKitUrl,
           collaborationRates: {
