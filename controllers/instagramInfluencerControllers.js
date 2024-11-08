@@ -24,17 +24,17 @@ module.exports.addInstagraminfluencer = async (req, res) => {
       if (location) {
           try {
               if (typeof location === 'string') {
-                  // Try parsing the location if it's a string
+                 
                   parsedLocation = JSON.parse(location);
                   console.log("Parsed location from string:", parsedLocation);
               } else if (typeof location === 'object') {
-                  // If location is already an object, use it as is
+                
                   parsedLocation = location;
                   console.log("Using location as object:", parsedLocation);
               }
           } catch (err) {
               console.error("Error parsing location:", err);
-              // In case of error, set parsedLocation to an empty object
+              
               parsedLocation = {};
           }
       } else {
@@ -43,7 +43,7 @@ module.exports.addInstagraminfluencer = async (req, res) => {
       
           //const parsedLocation = typeof location === 'string' ? JSON.parse(location) : location;
 
-      // Handle file uploads
+     
       if (req.files) {
           const profilePictureFile = req.files['profilePicture'] ? req.files['profilePicture'][0] : null;
           const mediaKitFile = req.files['mediaKit'] ? req.files['mediaKit'][0] : null;
@@ -52,20 +52,20 @@ module.exports.addInstagraminfluencer = async (req, res) => {
           mediaKitUrl = mediaKitFile ? `/uploads/${mediaKitFile.filename}` : mediaKitUrl;
       }
 
-      // Parse collaborationRates if it's a string
+   
       let parsedCollaborationRates = {};
       if (collaborationRates) {
           if (typeof collaborationRates === 'string') {
               parsedCollaborationRates = JSON.parse(collaborationRates);
           } else {
-              parsedCollaborationRates = collaborationRates || {};  // Handle undefined or empty cases
+              parsedCollaborationRates = collaborationRates || {};  
           }
       }
 
-      // Create the InstagramInfluencer object
+    
       const instagramInfluencer = new InstagramInfluencer({
           ...rest,
-          location: parsedLocation,  // Store parsed location here
+          location: parsedLocation,  
           profilePicture: profilePictureUrl,
           mediaKit: mediaKitUrl,
           collaborationRates: {
@@ -75,7 +75,7 @@ module.exports.addInstagraminfluencer = async (req, res) => {
           }
       });
 
-      // Save the influencer to the database
+
       await instagramInfluencer.save();
 
       res.status(201).json({ instagramInfluencer, message: "Instagram Influencer added Successfully" });
