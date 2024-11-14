@@ -79,11 +79,7 @@ const allowedOrigins = [
   'https://guest-posting-marketplace.netlify.app',
   'https://guest-posting-marketplace-web.netlify.app',
   'http://localhost:3000',
-<<<<<<< HEAD
   'http://connect.creatorsxchange.com'
-=======
-  "http://connect.creatorsxchange.com"
->>>>>>> 54947f9a539c1b0c542794f6ae35ac9a711ee643
 ];
 
 app.use(cors({
