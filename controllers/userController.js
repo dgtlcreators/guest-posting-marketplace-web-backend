@@ -65,7 +65,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
 
 module.exports.signupUser = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role , confirmPassword } = req.body;
 
 
     const user = await User.findOne({ email });

@@ -79,6 +79,7 @@ const allowedOrigins = [
   'https://guest-posting-marketplace.netlify.app',
   'https://guest-posting-marketplace-web.netlify.app',
   'http://localhost:3000',
+  "http://connect.creatorsxchange.com"
 ];
 
 app.use(cors({
@@ -278,15 +279,15 @@ app.get("/", (req, res) => {
 
 
   app.get('/convert-to-pdf', (req, res) => {
-    const imagePath = 'path/to/your/image.png'; // Path to your PNG image
-    const pdfPath = 'path/to/save/converted.pdf'; // Path to save the PDF
+    const imagePath = 'path/to/your/image.png'; 
+    const pdfPath = 'path/to/save/converted.pdf'; 
   
     const doc = new PDFDocument();
     doc.pipe(fs.createWriteStream(pdfPath));
     doc.image(imagePath, 0, 0, { width: 600 });
     doc.end();
   
-    // Send the PDF file to the client
+
     res.download(pdfPath, 'MediaKit.pdf');
   });
 const PORT = process.env.PORT || 5000;
