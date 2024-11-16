@@ -115,46 +115,10 @@ module.exports.applyData = async (req, res) => {
 };
 
 
-
-// Generate a daily Application
-
-/* actual module.exports.getDailyApplications = async (req, res) => {
-  try {
-    const { date } = req.query; // Get date from query parameters
-    const startDate = new Date(date);
-    const endDate = new Date(date);
-    //const endDate = new Date(startDate);
-   // endDate.setDate(startDate.getDate() + 1); // Set end date to the start date of the next day
-    endDate.setDate(startDate.getDate() );
-
-    const applications = await Apply.find({
-      createdAt: { $gte: startDate, $lt: endDate }
-    });
-
-    res.json(applications);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to get daily applications' });
-  }
-};*/
-
-/*module.exports.getDailyApplications = async (req, res) => {
-  try {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const applications = await Apply.find({ createdAt: { $gte: today } });
-    res.json(applications);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to get daily applications' });
-  }
-};*/
-// src/controllers/applyController.js
-
 module.exports.getDailyApplications = async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
 
-    // Create date range filters if dates are provided
     const dateFilters = {};
     if (startDate) {
       const start = new Date(startDate);
@@ -166,8 +130,7 @@ module.exports.getDailyApplications = async (req, res) => {
       end.setHours(23, 59, 59, 999);
       dateFilters.createdAt = { ...dateFilters.createdAt, $lte: end };
     }
-//console.log(startDate,endDate,dateFilters)
-    // Fetch filtered data
+
     const applications = await Apply.find(dateFilters);
     
     res.status(200).json(applications);
