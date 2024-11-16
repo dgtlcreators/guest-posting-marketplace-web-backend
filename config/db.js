@@ -6,15 +6,17 @@ const Grid = require('gridfs-stream');
 let gfs;
 
 const connectDB = async () => {
-    const url = process.env.MONGO_URI || "mongodb+srv://guest-posting-marketplace-web:guest-posting-marketplace-web@cluster0.kjvasef.mongodb.net/guest-posting-marketplace-web?retryWrites=true&w=majority&appName=Cluster0";
+     const url = process.env.MONGO_URI || "mongodb+srv://database_creators:GjSWaV7mJnOy5hJw@cluster0.lwyhn.mongodb.net/";
+   // const url = process.env.MONGO_URI || "mongodb+srv://guest-posting-marketplace-web:guest-posting-marketplace-web@cluster0.kjvasef.mongodb.net/guest-posting-marketplace-web?retryWrites=true&w=majority&appName=Cluster0";
 
     try {
-        // Measure the start time for DB connection
+
         const dbConnectStart = process.hrtime();
 
-        // Connect to MongoDB
+
         const conn = await mongoose.connect(url, {
             dbName: "guest-posting-marketplace-web",
+            //dbName: "CreatorsDB",
             useNewUrlParser: true,
             useUnifiedTopology: true,
             maxPoolSize: 10,//10,

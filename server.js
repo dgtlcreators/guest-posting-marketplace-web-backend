@@ -23,7 +23,7 @@ console.log(process.env.STRIPE_SECRET_KEY)
 
 
 const PDFDocument = require('pdfkit');
-
+const validator = require('validator');
 const userRoute=require("./routes/userRoute")
 const formRoute=require("./routes/formRoute")
 const adminRoute=require("./routes/adminRoute")
@@ -43,43 +43,13 @@ const locationRoute=require("./routes/locationroute")
 
 const app = express();
 connectDB();
-/*
-app.use(cors({
-  origin: 'https://guest-posting-marketplace-web.netlify.app',
-  credentials: true  
-}));
-*/
-/*
-app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true, 
-}));
-*/
-/*
-const allowedOrigins = [
-  'https://guest-posting-marketplace.netlify.app',
-  'https://guest-posting-marketplace-web.netlify.app',
-  'http://localhost:3000', 
-];
-
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-}));
-*/
 
 const allowedOrigins = [
   'https://guest-posting-marketplace.netlify.app',
   'https://guest-posting-marketplace-web.netlify.app',
   'http://localhost:3000',
-  "http://connect.creatorsxchange.com"
+  'http://connect.creatorsxchange.com',
+  'https://connect.creatorsxchange.com'
 ];
 
 app.use(cors({
@@ -136,53 +106,6 @@ app.get('/cancel', (req, res) => {
 
 const User = require('./models/userModel');
 
-
-/*app.post('users/:id/buyed', async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    console.log(req.params.id)
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    user.isBuyed = true;
-    await user.save();
-    res.json(user);
-  } catch (error) {
-    console.log(error)
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-*/
-
-
-
-/* this is usefull
-app.post('/create-payment-intent', async (req, res) => {
-  const { price } = req.body;
-
-  try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: price * 100,
-      currency: 'usd',
-    });
-
-    res.send({
-      clientSecret: paymentIntent.client_secret,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(400).send({
-      error: {
-        message: error.message,
-      },
-    });
-  }
-});*/
-
-
-
-
-
 app.use("/user", userRoute);
 app.use("/form", formRoute);
 // app.use("/form", verifyUser, formRoute);
@@ -203,68 +126,47 @@ app.use('/locationroute', locationRoute);
 
 app.use('/pastactivities', pastActivitiesRoute);
 
+
+
 app.get("/verify", async (req, res) => {
-  const { token, email } = req.query;
-  const user = await User.findOne({ email });
+    const { token, email } = req.query;
 
-  if (!user) {
-      return res.status(400).send(`
-          <html>
-              <head>
-                  <title>Error</title>
-              </head>
-              <body>
-                  <h2>User not found</h2>
-                  <p>The user associated with this email was not found.</p>
-              </body>
-          </html>
-      `);
-  }
+    if (!token || !email || !validator.isEmail(email)) {
+        return res.status(400).send('Invalid request. Please ensure your email and token are valid.');
+    }
 
-  if (user.isVerified) {
-      return res.status(400).send(`
-          <html>
-              <head>
-                  <title>Email Already Verified</title>
-              </head>
-              <body>
-                  <h2>Email Already Verified</h2>
-                  <p>This email has already been verified. You can now log in.</p>
-              </body>
-          </html>
-      `);
-  }
+    try {
+        const user = await User.findOne({ email });
 
-  if (user.verificationToken !== token) {
-      return res.status(400).send(`
-          <html>
-              <head>
-                  <title>Invalid Token</title>
-              </head>
-              <body>
-                  <h2>Invalid Verification Token</h2>
-                  <p>The token provided is invalid or has expired.</p>
-              </body>
-          </html>
-      `);
-  }
+        if (!user) {
+            console.error(`User not found for email: ${email}`);
+            return res.redirect('https://connect.creatorsxchange.com/error?message=UserNotFound');
+        }
 
-  user.isVerified = true;
-  user.verificationToken = null; 
-  await user.save();
+        if (user.isVerified) {
+         // return res.redirect('http://localhost:3000/error?message=AlreadyVerified');
+            return res.redirect('https://connect.creatorsxchange.com/error?message=AlreadyVerified');
+        }
 
-  res.send(`
-      <html>
-          <head>
-              <title>Email Verified</title>
-          </head>
-          <body>
-              <h2>Email Verified Successfully!</h2>
-              <p>You can now log in.</p>
-          </body>
-      </html>
-  `);
+        if (user.verificationToken !== token || user.tokenExpiry < Date.now()) {
+          //return res.redirect('https://cohttp://localhost:3000/error?message=InvalidToken');
+            return res.redirect('https://connect.creatorsxchange.com/error?message=InvalidToken');
+        }
+
+        user.isVerified = true;
+        user.verificationToken = null;
+        user.tokenExpiry = null; // Clear expiry time
+        await user.save();
+
+       // res.redirect('http://localhost:3000/verification-success');
+
+        res.redirect('https://connect.creatorsxchange.com/verification-success');
+    } catch (err) {
+        console.error('Error verifying user:', err);
+        res.status(500).send('An error occurred. Please try again later.');
+    }
 });
+
 
 
 app.use("/transaction",transactionRoute);
@@ -292,3 +194,4 @@ app.get("/", (req, res) => {
   });
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+

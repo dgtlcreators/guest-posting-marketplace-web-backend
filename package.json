@@ -3,14 +3,17 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodeman server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node server.js",
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo 'No build step for backend.'"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@netlify/functions": "^2.8.2",
     "axois": "^0.0.1-security",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
@@ -32,7 +35,9 @@
     "nodemailer": "^6.9.16",
     "nodeman": "^1.1.2",
     "pdfkit": "^0.15.0",
+    "serverless-http": "^3.2.0",
     "sib-api-v3-sdk": "^8.5.0",
-    "stripe": "^16.2.0"
+    "stripe": "^16.2.0",
+    "validator": "^13.12.0"
   }
 }
