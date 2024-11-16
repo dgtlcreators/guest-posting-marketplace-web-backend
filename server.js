@@ -43,37 +43,6 @@ const locationRoute=require("./routes/locationroute")
 
 const app = express();
 connectDB();
-/*
-app.use(cors({
-  origin: 'https://guest-posting-marketplace-web.netlify.app',
-  credentials: true  
-}));
-*/
-/*
-app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true, 
-}));
-*/
-/*
-const allowedOrigins = [
-  'https://guest-posting-marketplace.netlify.app',
-  'https://guest-posting-marketplace-web.netlify.app',
-  'http://localhost:3000', 
-];
-
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-}));
-*/
 
 const allowedOrigins = [
   'https://guest-posting-marketplace.netlify.app',
@@ -254,17 +223,8 @@ app.get("/verify", async (req, res) => {
   user.verificationToken = null; 
   await user.save();
 
-  res.send(`
-      <html>
-          <head>
-              <title>Email Verified</title>
-          </head>
-          <body>
-              <h2>Email Verified Successfully!</h2>
-              <p>You can now log in.</p>
-          </body>
-      </html>
-  `);
+  // Redirect to verification success page
+  res.redirect('/verification-success');
 });
 
 
