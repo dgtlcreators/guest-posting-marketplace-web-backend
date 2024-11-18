@@ -23,8 +23,8 @@ const sendVerificationEmail = async (email, verificationToken) => {
   sendSmtpEmail.to = [{ email }];
   sendSmtpEmail.sender = { name: "CreatorXChange", email: "creatorsxchange@gmail.com" };
   sendSmtpEmail.subject = "Email Verification - CreatorXChange";
-  const frontendUrl="https://guest-posting-marketplace-web-backend-mu57.onrender.com"
- // const frontendUrl="http://localhost:5000"
+  //const frontendUrl="https://guest-posting-marketplace-web-backend-mu57.onrender.com"
+  const frontendUrl="http://localhost:5000"
 
   sendSmtpEmail.htmlContent = `
    <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 16px; background-color: #F9FAFB; font-family: 'Helvetica Neue', 'Segoe UI', Roboto, sans-serif;">

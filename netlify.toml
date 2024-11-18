@@ -1,12 +1,7 @@
 [build]
-  functions = "netlify/functions"   # Ensure this points to your functions directory
+  functions = "netlify/functions"  # Directory for your functions
 
 [[redirects]]
-  from = "/functions/*"
-  to = "/functions/:splat"
+  from = "/api/*"
+  to = "/.netlify/functions/api"
   status = 200
-  force = true
-
-[dev]
-  command = "npm run dev"  
-  port = 8888
