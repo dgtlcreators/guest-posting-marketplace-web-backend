@@ -147,53 +147,6 @@ module.exports.createPastActivities = async (req, res) => {
 };
 
 
-/*module.exports.createPastActivities1 = async (req, res) => {
-    try {
-       // console.log(req.body);
-        const { userId, action, section, role, details } = req.body;
-        const user = await getUserDetails(userId);
-        
-        if (!userId || !action || !section || !role) {
-           // throw new Error('Missing required fields');
-        }
-        if (!user) {
-          //  return res.status(404).json({message: 'User not found',});
-        }
-
-        const activity = new Activity({
-            userId,
-            user: {
-                name: user.name,
-                email: user.email,
-                role: user.role,
-            },
-            action,
-            section,
-            role,
-            details,
-            
-        });
-
-        
-
-        await activity.save();
-
-        res.status(201).json({
-            message: 'Activity created successfully',
-            data: activity
-        });
-    } catch (error) {
-        // Log detailed error information
-        console.error('Error saving activity:', error.message, error.stack);
-        res.status(500).json({
-            message: 'Failed to create activity',
-            error: error.message
-        });
-    }
-};
-*/
-
-
  module.exports.getAllPastActivities = async (req, res) => {
     try {
        
