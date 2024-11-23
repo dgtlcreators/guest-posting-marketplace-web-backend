@@ -47,12 +47,14 @@ const sendVerificationEmail = async (email, verificationToken) => {
   sendSmtpEmail.to = [{ email }];
   sendSmtpEmail.sender = { name: "CreatorXChange", email: "myfromemail@mycompany.com" };
   sendSmtpEmail.subject = "Email Verification - CreatorXChange";
-  const frontendUrl="https://guest-posting-marketplace-web-backend-1.onrender.com"
-  // const frontendUrl="http://localhost:5000"
+  //const backendUrl="https://guest-posting-marketplace-web-backend-1.onrender.com"
+   const backendUrl="http://localhost:5000"
+    //const backendUrl="https://guest-posting-marketplace-web-backend-mu57.onrender.com"
+
   sendSmtpEmail.htmlContent = `
     <h2>Welcome to CreatorXChange!</h2>
     <p>Please verify your email by clicking the link below:</p>
-    <a href="${frontendUrl}/verify?token=${verificationToken}&email=${email}">Verify Email</a>
+    <a href="${backendUrl}/verify?token=${verificationToken}&email=${email}">Verify Email</a>
   `;
 
   try {

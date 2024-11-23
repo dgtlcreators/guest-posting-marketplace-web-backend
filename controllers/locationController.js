@@ -45,18 +45,35 @@ module.exports.stateApi = async (req, res) => {
   
 
 module.exports.cityApi = async (req, res) => {
-    const { countryCode, stateCode } = req.body;
+  
+    const { countryCode, stateCode ,stateIsocode} = req.body;
+//console.log("countryCode, stateCode ,stateIsocode",countryCode, stateCode,stateIsocode)
 
     if (!countryCode || !stateCode) {
         return res.status(400).json({ error: "Country code and state code are required" });
     }
 
     try {
-        const response = await fetch(`http://api.geonames.org/searchJSON?country=${countryCode}&adminCode1=${stateCode}&featureCode=PPL&username=${username}`);
+        //http://api.geonames.org/children?geonameId=STATE_GEONAME_ID&username=yourusername
+
+//http://api.geonames.org/searchJSON?country=IN&adminName1=Bihar&featureClass=P&maxRows=1000&username=roja1
+
+      //  const response = await fetch(`http://api.geonames.org/searchJSON?country=${countryCode}&adminName1=${stateCode}&featureCode=PPL&username=roja1`)
+       // actual const response = await fetch(`http://api.geonames.org/searchJSON?country=${countryCode}&adminCode1=${stateCode}&fCode=PPLA&username=${username}`);
+        
+     // all const response = await fetch(`http://api.geonames.org/searchJSON?country=${countryCode}&adminName1=${stateCode}&featureClass=P&maxRows=1000&username=${username}`);
+     const response = await fetch(`http://api.geonames.org/searchJSON?country=${countryCode}&adminName1=${stateCode}&maxRows=1000&username=${username}`);
+
         const data = await response.json();
+        const filteredCities = data.geonames.filter(city => {
+            return city.adminCodes1 && city.adminCodes1.ISO3166_2 === stateIsocode; 
+          });
+      
+       
+        //  console.log(filteredCities);
 
         if (data.geonames) {
-            res.status(200).json({ cities: data.geonames });
+            res.status(200).json({ cities: filteredCities});
         } else {
             res.status(404).json({ message: "No city data found for this state" });
         }
