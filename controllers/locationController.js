@@ -55,15 +55,9 @@ module.exports.cityApi = async (req, res) => {
 
     try {
         //http://api.geonames.org/children?geonameId=STATE_GEONAME_ID&username=yourusername
-
-//http://api.geonames.org/searchJSON?country=IN&adminName1=Bihar&featureClass=P&maxRows=1000&username=roja1
-
-      //  const response = await fetch(`http://api.geonames.org/searchJSON?country=${countryCode}&adminName1=${stateCode}&featureCode=PPL&username=roja1`)
-       // actual const response = await fetch(`http://api.geonames.org/searchJSON?country=${countryCode}&adminCode1=${stateCode}&fCode=PPLA&username=${username}`);
-        
-     // all const response = await fetch(`http://api.geonames.org/searchJSON?country=${countryCode}&adminName1=${stateCode}&featureClass=P&maxRows=1000&username=${username}`);
-     const response = await fetch(`http://api.geonames.org/searchJSON?country=${countryCode}&adminName1=${stateCode}&maxRows=1000&username=${username}`);
-
+       // actual const response = await fetch(`http://api.geonames.org/searchJSON?country=${countryCode}&adminCode1=${stateCode}&fCode=PPLA&username=${username}`);    
+ // const response = await fetch(`http://api.geonames.org/searchJSON?country=${countryCode}&adminName1=${stateCode}&maxRows=1000&username=${username}`);
+const response = await fetch(`http://api.geonames.org/searchJSON?q=${stateCode}&country=IN&username=${username}`)
         const data = await response.json();
         const filteredCities = data.geonames.filter(city => {
             return city.adminCodes1 && city.adminCodes1.ISO3166_2 === stateIsocode; 
