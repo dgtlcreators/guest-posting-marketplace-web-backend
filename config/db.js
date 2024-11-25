@@ -6,7 +6,7 @@ const Grid = require('gridfs-stream');
 let gfs;
 
 const connectDB = async () => {
-     const url = process.env.MONGO_URI || "mongodb+srv://database_creators:GjSWaV7mJnOy5hJw@cluster0.lwyhn.mongodb.net";
+     const url =  "mongodb+srv://database_creators:GjSWaV7mJnOy5hJw@cluster0.lwyhn.mongodb.net";
    // const url = process.env.MONGO_URI || "mongodb+srv://guest-posting-marketplace-web:guest-posting-marketplace-web@cluster0.kjvasef.mongodb.net/guest-posting-marketplace-web?retryWrites=true&w=majority&appName=Cluster0";
 console.log("MONDO DB URL ",url)
     try {
@@ -24,7 +24,7 @@ console.log("MONDO DB URL ",url)
            // keepAlive: true,
            // keepAliveInitialDelay: 300000
         // autoIndex: false,
-           connectTimeoutMS:10000, //5000, //10000,  
+           connectTimeoutMS:10000, //5000,  
            socketTimeoutMS: 20000,//45000,
          
            

@@ -27,7 +27,7 @@ module.exports.addYoutubeInfluencer = async (req, res) => {
     } = req.body;
    // console.log("Req body: ",req.body)
 
-   
+   console.log("Lang ",language)
     const parsedPastCollaborations = JSON.parse(pastCollaborations);
     const parsedAudienceDemographics = {
       age: JSON.parse(audienceDemographics.age || '[]'),
@@ -96,69 +96,7 @@ module.exports.getYoutubeInfluencerById=async(req,res)=>{
     }
     
 
-module.exports.updateYoutubeInfluencer1 = async (req, res) => {
-  try {
-    console.log("updateYoutubeInfluencer ",req.body)
-      const { username, fullname, profilePicture, bio, followersCount, videosCount, engagementRate, averageViews, category, location, language, collaborationRates, pastCollaborations, audienceDemographics, mediaKit ,isBookmarked} = req.body;
-    //  console.log(req.body);
 
-
-      let profilePictureUrl = profilePicture;
-      let mediaKitUrl = mediaKit;
-
-      if (req.files) {
-          const profilePictureFile = req.files["profilePicture"] ? req.files["profilePicture"][0] : null;
-          const mediaKitFile = req.files["mediaKit"] ? req.files["mediaKit"][0] : null;
-
-          profilePictureUrl = profilePictureFile ? `/uploads/${profilePictureFile.filename}` : profilePictureUrl;
-          mediaKitUrl = mediaKitFile ? `/uploads/${mediaKitFile.filename}` : mediaKitUrl;
-      }
-
-      const parsedPastCollaborations = Array.isArray(pastCollaborations) ? pastCollaborations : JSON.parse(pastCollaborations || '[]');
-      const parsedAudienceDemographics = {
-          age: Array.isArray(audienceDemographics?.age) ? audienceDemographics.age : JSON.parse(audienceDemographics?.age || '[]'),
-          gender: Array.isArray(audienceDemographics?.gender) ? audienceDemographics.gender : JSON.parse(audienceDemographics?.gender || '[]'),
-          geographicDistribution: Array.isArray(audienceDemographics?.geographicDistribution) ? audienceDemographics.geographicDistribution : JSON.parse(audienceDemographics?.geographicDistribution || '[]'),
-      };
-
-      const parsedLocation = typeof location === 'string' ? JSON.parse(location) : location;
-
-      const updatedData = {
-          username,
-          fullname,
-          profilePicture: profilePictureUrl,
-          bio,
-          followersCount: Number(followersCount) || 0,
-          videosCount: Number(videosCount) || 0,
-          engagementRate: Number(engagementRate) || 0,
-          averageViews: Number(averageViews) || 0,
-          category,
-         // location,
-         location: parsedLocation,
-          language,
-          collaborationRates: {
-              sponsoredVideos: Number(collaborationRates?.sponsoredVideos) || 0,
-              productReviews: Number(collaborationRates?.productReviews) || 0,
-              shoutouts: Number(collaborationRates?.shoutouts) || 0,
-          },
-          pastCollaborations: parsedPastCollaborations,
-          audienceDemographics: parsedAudienceDemographics,
-          mediaKit: mediaKitUrl,isBookmarked
-      };
-
-      const youtubeInfluencer = await YoutubeInfluencer.findByIdAndUpdate(req.params.id, updatedData, { new: true });
-
-    
-      if (!youtubeInfluencer) {
-          return res.status(404).json({ message: "Youtube Influencer not found" });
-      }
-
-      res.status(200).json({ message: "Youtube Influencer updated successfully", data: youtubeInfluencer });
-
-  } catch (error) {
-      res.status(500).json({ message: error.message });
-  }
-};
 
 module.exports.updateYoutubeInfluencer = async (req, res) => {
   try {
@@ -203,9 +141,24 @@ module.exports.updateYoutubeInfluencer = async (req, res) => {
      const parsedLocation = location ? JSON.parse(location.replace(/([a-zA-Z]+):/g, '"$1":')) : { country: "", state: "", city: "" };
 
 
-   
-   
-   console.log("Parsed location:", parsedLocation);
+     let parsedCollaborationRates = collaborationRates;
+     if (typeof collaborationRates === 'string') {
+       try {
+         parsedCollaborationRates = JSON.parse(collaborationRates);
+       } catch (e) {
+         console.error("Failed to parse collaborationRates:", e);
+       }
+     }
+     
+     parsedCollaborationRates = {
+      sponsoredVideos: Number(parsedCollaborationRates.sponsoredVideos) || 0,
+      productReviews: Number(parsedCollaborationRates.productReviews) || 0,
+      shoutouts: Number(parsedCollaborationRates.shoutouts) || 0
+    };
+
+    console.log("Parsed location:", parsedLocation);
+    console.log("Parsed collaborationRates:", parsedCollaborationRates);
+
 
     const updatedData = {
       username,
@@ -219,11 +172,12 @@ module.exports.updateYoutubeInfluencer = async (req, res) => {
       category,
       location: parsedLocation,
       language,
-      collaborationRates: {
-        sponsoredVideos: Number(collaborationRates?.sponsoredVideos) || 0,
-        productReviews: Number(collaborationRates?.productReviews) || 0,
-        shoutouts: Number(collaborationRates?.shoutouts) || 0,
-      },
+      collaborationRates: parsedCollaborationRates,
+     // collaborationRates: {
+     //   sponsoredVideos: Number(collaborationRates?.sponsoredVideos) || 0,
+     //   productReviews: Number(collaborationRates?.productReviews) || 0,
+     //   shoutouts: Number(collaborationRates?.shoutouts) || 0,
+    //  },
       pastCollaborations: parsedPastCollaborations,
       audienceDemographics: parsedAudienceDemographics,
       mediaKit: mediaKitUrl,
