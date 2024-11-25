@@ -15,8 +15,8 @@ console.log("MONDO DB URL ",url)
 
 
         const conn = await mongoose.connect(url, {
-            dbName: "guest-posting-marketplace-web",
-            //dbName: "CreatorsDB",
+           // dbName: "guest-posting-marketplace-web",
+            dbName: "CreatorsDB",
             useNewUrlParser: true,
             useUnifiedTopology: true,
             maxPoolSize: 10,//10,
@@ -35,12 +35,10 @@ console.log("MONDO DB URL ",url)
         const dbConnectEnd = process.hrtime(dbConnectStart);
         console.log(`Database connection took ${dbConnectEnd[0]} seconds and ${dbConnectEnd[1] / 1000000} milliseconds`);
 
-        // Initialize GridFS
         gfs = Grid(conn.connection.db, mongoose.mongo);
         gfs.collection('uploads');
         console.log('MongoDB connected');
 
-        // Function to check and create default users
         const checkAndCreateUser = async (role, name, email, password) => {
             const userCheckStart = process.hrtime();
             const user = await User.findOne({ role });
@@ -53,7 +51,8 @@ console.log("MONDO DB URL ",url)
                     name,
                     email,
                     password: await bcrypt.hash(password, 10),
-                    role
+                    role,
+                    isVerified: true, 
                 });
                 await newUser.save();
                 console.log(`${role} created`);
@@ -62,7 +61,6 @@ console.log("MONDO DB URL ",url)
             }
         };
 
-        // Check and create default Super Admin and Admin
         await checkAndCreateUser('Super Admin', 'Default Super Admin', 'superadmin@example.com', 'superadminpassword');
         await checkAndCreateUser('Admin', 'Default Admin', 'admin@example.com', 'adminpassword');
 
