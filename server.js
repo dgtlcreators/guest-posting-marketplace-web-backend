@@ -167,7 +167,7 @@ app.get("/verify", async (req, res) => {
     }
 });
 
-
+console.log("Mongodb Url ",process.env.MONGO_URI)
 
 app.use("/transaction",transactionRoute);
 
