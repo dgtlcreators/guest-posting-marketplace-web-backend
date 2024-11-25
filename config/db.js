@@ -17,9 +17,9 @@ console.log("MONDO DB URL ",url)
         const conn = await mongoose.connect(url, {
            // dbName: "guest-posting-marketplace-web",
             dbName: "CreatorsDB",
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            maxPoolSize: 10,//10,
+           // useNewUrlParser: true,
+           // useUnifiedTopology: true,
+            maxPoolSize: 10,
             serverSelectionTimeoutMS:2000,// 3000,
            // keepAlive: true,
            // keepAliveInitialDelay: 300000
