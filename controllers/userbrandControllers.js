@@ -6,8 +6,9 @@ const Activity = require('../models/activity.js');
 const filterInstagramInfluencers = async (req, res) => {
   // Extract the first object from the array in req.body
  // const formData = req.body[0];
+ console.log("Req ",req.body)
  const formData = Array.isArray(req.body) ? req.body[0] : req.body;
-
+console.log("Form Data ",formData)
   
   //console.log("Received formData:", formData);
   

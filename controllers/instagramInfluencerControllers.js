@@ -202,28 +202,6 @@ console.log("req.files: ", req.files);
     }
   };
 
-/*module.exports.addInstagraminfluencer = async (req, res) => {
-  try {
-    const profilePictureFile = req.files['profilePicture'] ? req.files['profilePicture'][0] : null;
-    const mediaKitFile = req.files['mediaKit'] ? req.files['mediaKit'][0] : null;
-
-    const profilePictureUrl = profilePictureFile ? `/uploads/${profilePictureFile.filename}` : null;
-    const mediaKitUrl = mediaKitFile ? `/uploads/${mediaKitFile.filename}` : null;
-
-    const instagramInfluencer = new InstagramInfluencer({
-      ...req.body,
-      profilePicture: profilePictureUrl,
-      mediaKit: mediaKitUrl
-    });
-
-    // Save document to database
-    await instagramInfluencer.save();
-    res.status(201).json({ instagramInfluencer, message: "Instagram Influencer added Successfully" });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};*/
-
 
 module.exports.getAllInstagraminfluencer=async(req,res)=>{
     try {
@@ -275,15 +253,9 @@ module.exports.getInstagraminfluencerById=async(req,res)=>{
 
 module.exports.updateInstagraminfluencer=async(req,res)=>{
     try {
-      //console.log("updateInstagraminfluencer ",req.body)
-        //const profilePicture = req.files['profilePicture'] ? req.files['profilePicture'][0].path : null;
-  //  const mediaKit = req.files['mediaKit'] ? req.files['mediaKit'][0].path : null;
-  //const profilePictureFile = req.files['profilePicture'] ? req.files['profilePicture'][0] : null;
-  //const mediaKitFile = req.files['mediaKit'] ? req.files['mediaKit'][0] : null;
-
-   // const profilePictureUrl = profilePictureFile ? `/uploads/${profilePictureFile.filename}` : 4;
-    //const mediaKitUrl = mediaKitFile ? `/uploads/${mediaKitFile.filename}` : null;
-    const { profilePicture, mediaKit, collaborationRates,isBookmarked, ...rest } = req.body;
+    
+    const {location, profilePicture, mediaKit, collaborationRates,isBookmarked, ...rest } = req.body;
+    console.log()
     let profilePictureUrl = profilePicture;
     let mediaKitUrl = mediaKit;
 
@@ -295,19 +267,55 @@ module.exports.updateInstagraminfluencer=async(req,res)=>{
       mediaKitUrl = mediaKitFile ? `/uploads/${mediaKitFile.filename}` : mediaKitUrl;
     }
 
-    // Update Instagram influencer
+    let parsedLocation = {};
+
+    if (location) {
+        try {
+            if (typeof location === 'string') {
+               
+                parsedLocation = JSON.parse(location);
+                console.log("Parsed location from string:", parsedLocation);
+            } else if (typeof location === 'object') {
+              
+                parsedLocation = location;
+                console.log("Using location as object:", parsedLocation);
+            }
+        } catch (err) {
+            console.error("Error parsing location:", err);
+            
+            parsedLocation = {};
+        }
+    } else {
+        console.log("Location not provided or is empty");
+    }
+    
+    let parsedCollaborationRates = {};
+    if (collaborationRates) {
+        if (typeof collaborationRates === 'string') {
+            parsedCollaborationRates = JSON.parse(collaborationRates);
+        } else {
+            parsedCollaborationRates = collaborationRates || {};  
+        }
+    }
+   
     const updatedData = {
       ...req.body,
       //profilePicture:profilePictureUrl,
      // mediaKit:mediaKitUrl,
+     location: parsedLocation,  
      isBookmarked: isBookmarked === true,
      profilePicture: profilePictureUrl,
      mediaKit: mediaKitUrl,
      collaborationRates: {
-       post: Number(collaborationRates?.post) || 0,
-       story: Number(collaborationRates?.story) || 0,
-       reel: Number(collaborationRates?.reel) || 0
-     }
+        post: Number(parsedCollaborationRates.post) || 0,
+        story: Number(parsedCollaborationRates.story) || 0,
+        reel: Number(parsedCollaborationRates.reel) || 0
+    }
+     //collaborationRates: {
+     //  post: Number(collaborationRates?.post) || 0,
+    //   story: Number(collaborationRates?.story) || 0,
+     //  reel: Number(collaborationRates?.reel) || 0
+    // }
     };
     const instagramInfluencer = await InstagramInfluencer.findByIdAndUpdate(req.params.id, updatedData, { new: true });
        // const instagramInfluencer=await InstagramInfluencer.findByIdAndUpdate(req.params.id,req.body,{new:true})

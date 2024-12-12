@@ -1,15 +1,11 @@
 const dns = require('dns');
 const dnscache = require('dnscache')({
     enable: true,
-    ttl: 300, // Time to live in seconds, adjust as needed
-    cachesize: 1000 // Cache up to 1000 items
+    ttl: 300, 
+    cachesize: 1000 
 });
 
-// Replace the default DNS servers with Google's public DNS or your preferred DNS
 dns.setServers(['8.8.8.8', '8.8.4.4']);
-
-
-
 
 
 
@@ -54,7 +50,6 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
@@ -80,21 +75,21 @@ app.get('/complete', async (req, res) => {
   try {
     const { session_id } = req.query;
 
-    // Retrieve session details from Stripe
+
     const session = await stripe.checkout.sessions.retrieve(session_id);
 
-    // Assuming you have a userId stored in the session metadata
+
     const userId = session.metadata.userId;
 
-    // Update MongoDB entry to mark as bought
+
     await formData.findByIdAndUpdate(userId, { isBuyied: true });
 
-    // Redirect to /form or any appropriate route
+
     res.redirect('/form');
   } catch (error) {
     console.error('Error completing payment:', error);
-    // Handle error appropriately
-    res.redirect('/cancel'); // Redirect to cancel page or handle error
+
+    res.redirect('/cancel'); 
   }
 });
 
@@ -140,17 +135,20 @@ app.get("/verify", async (req, res) => {
 
         if (!user) {
             console.error(`User not found for email: ${email}`);
-            return res.redirect('https://connect.creatorsxchange.com/error?message=UserNotFound');
+            return res.redirect('http://connect.creatorsxchange.com/error?message=UserNotFound');
+            //return res.redirect('https://connect.creatorsxchange.com/error?message=UserNotFound');
         }
 
         if (user.isVerified) {
          // return res.redirect('http://localhost:3000/error?message=AlreadyVerified');
-            return res.redirect('https://connect.creatorsxchange.com/error?message=AlreadyVerified');
+           // return res.redirect('https://connect.creatorsxchange.com/error?message=AlreadyVerified');
+           return res.redirect('http://connect.creatorsxchange.com/error?message=AlreadyVerified');
         }
 
         if (user.verificationToken !== token || user.tokenExpiry < Date.now()) {
           //return res.redirect('https://cohttp://localhost:3000/error?message=InvalidToken');
-            return res.redirect('https://connect.creatorsxchange.com/error?message=InvalidToken');
+         //   return res.redirect('https://connect.creatorsxchange.com/error?message=InvalidToken');
+            return res.redirect('http://connect.creatorsxchange.com/error?message=InvalidToken');
         }
 
         user.isVerified = true;
@@ -160,14 +158,15 @@ app.get("/verify", async (req, res) => {
 
        // res.redirect('http://localhost:3000/verification-success');
 
-        res.redirect('https://connect.creatorsxchange.com/verification-success');
+       // res.redirect('https://connect.creatorsxchange.com/verification-success');
+        res.redirect('http://connect.creatorsxchange.com/verification-success');
     } catch (err) {
         console.error('Error verifying user:', err);
         res.status(500).send('An error occurred. Please try again later.');
     }
 });
 
-
+console.log("Mongodb Url ",process.env.MONGO_URI)
 
 app.use("/transaction",transactionRoute);
 
