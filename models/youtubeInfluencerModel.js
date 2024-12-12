@@ -15,8 +15,8 @@ const YoutubeInfluencerSchema=new mongoose.Schema({
         country: { type: String },
         state: { type: String },
         city: { type: String },
-      },
-   // location:{type:String},
+    },
+    verifiedStatus: { type: Boolean, required: true, default: false },
     language:{type:String},
     collaborationRates:{
         sponsoredVideos:{type:Number,default:0},

@@ -13,6 +13,7 @@ module.exports.addYoutubeInfluencer = async (req, res) => {
       fullname,
       profilePicture,
       bio,
+      verifiedStatus,
       followersCount,
       videosCount,
       engagementRate,
@@ -41,6 +42,7 @@ module.exports.addYoutubeInfluencer = async (req, res) => {
       fullname,
       profilePicture,
       bio,
+      verifiedStatus,
       followersCount: Number(followersCount) || 0,
       videosCount: Number(videosCount) || 0,
       engagementRate: Number(engagementRate) || 0,
@@ -87,6 +89,7 @@ module.exports.getYoutubeInfluencerById=async(req,res)=>{
     try {
      
         const youtubeInfluencer=await YoutubeInfluencer.findById(req.params.id)
+        console.log(youtubeInfluencer);
         if(!youtubeInfluencer) return res.status(404).json({meassage:"Youtube Influencer not found"})
         res.status(200).json({message:"Youtube Influencer By Id fetch data successfully",data:youtubeInfluencer})
         
@@ -99,7 +102,7 @@ module.exports.getYoutubeInfluencerById=async(req,res)=>{
 module.exports.updateYoutubeInfluencer1 = async (req, res) => {
   try {
     console.log("updateYoutubeInfluencer ",req.body)
-      const { username, fullname, profilePicture, bio, followersCount, videosCount, engagementRate, averageViews, category, location, language, collaborationRates, pastCollaborations, audienceDemographics, mediaKit ,isBookmarked} = req.body;
+      const { username, fullname,verifiedStatus, profilePicture, bio, followersCount, videosCount, engagementRate, averageViews, category, location, language, collaborationRates, pastCollaborations, audienceDemographics, mediaKit ,isBookmarked} = req.body;
     //  console.log(req.body);
 
 
@@ -120,7 +123,7 @@ module.exports.updateYoutubeInfluencer1 = async (req, res) => {
           gender: Array.isArray(audienceDemographics?.gender) ? audienceDemographics.gender : JSON.parse(audienceDemographics?.gender || '[]'),
           geographicDistribution: Array.isArray(audienceDemographics?.geographicDistribution) ? audienceDemographics.geographicDistribution : JSON.parse(audienceDemographics?.geographicDistribution || '[]'),
       };
-
+      const verified = verifiedStatus ? true : false;
       const parsedLocation = typeof location === 'string' ? JSON.parse(location) : location;
 
       const updatedData = {
@@ -128,6 +131,7 @@ module.exports.updateYoutubeInfluencer1 = async (req, res) => {
           fullname,
           profilePicture: profilePictureUrl,
           bio,
+          verifiedStatus: verified,
           followersCount: Number(followersCount) || 0,
           videosCount: Number(videosCount) || 0,
           engagementRate: Number(engagementRate) || 0,
@@ -166,7 +170,7 @@ module.exports.updateYoutubeInfluencer = async (req, res) => {
     console.log("Update data:", req.body);
     console.log("Request body:", req.body);
 
-    const { username, fullname, profilePicture, bio, followersCount, videosCount, engagementRate, averageViews, category, location, language, collaborationRates, pastCollaborations, audienceDemographics, mediaKit, isBookmarked } = req.body;
+    const { username, fullname, profilePicture, bio,verifiedStatus, followersCount, videosCount, engagementRate, averageViews, category, location, language, collaborationRates, pastCollaborations, audienceDemographics, mediaKit, isBookmarked } = req.body;
 
 
     let profilePictureUrl = profilePicture;
@@ -187,6 +191,7 @@ module.exports.updateYoutubeInfluencer = async (req, res) => {
       gender: Array.isArray(audienceDemographics?.gender) ? audienceDemographics.gender : JSON.parse(audienceDemographics?.gender || '[]'),
       geographicDistribution: Array.isArray(audienceDemographics?.geographicDistribution) ? audienceDemographics.geographicDistribution : JSON.parse(audienceDemographics?.geographicDistribution || '[]'),
     };
+    const verified = verifiedStatus;
 
     // Correctly parse location
    // const parsedLocation = location && typeof location === 'string' ? JSON.parse(location) : location;
@@ -212,6 +217,7 @@ module.exports.updateYoutubeInfluencer = async (req, res) => {
       fullname,
       profilePicture: profilePictureUrl,
       bio,
+      verifiedStatus: verified,
       followersCount: Number(followersCount) || 0,
       videosCount: Number(videosCount) || 0,
       engagementRate: Number(engagementRate) || 0,
@@ -265,6 +271,7 @@ module.exports.getFilteredYoutubeInfluences=async(req,res)=>{
     const formData = Array.isArray(req.body) ? req.body[0] : req.body;
     const {
       username,fullname,
+      verifiedStatus,
       followersCountFrom,followersCountTo,
       videosCountFrom,videosCountTo,
       engagementRateFrom,engagementRateTo,
@@ -297,7 +304,8 @@ module.exports.getFilteredYoutubeInfluences=async(req,res)=>{
     if (location.city) query['location.city'] = { $regex: new RegExp(location.city, 'i') };
   }
     if(language) query.language=language
-   
+    if (verifiedStatus !== undefined && verifiedStatus !== "") query.verifiedStatus = verifiedStatus;
+
 
     if(collaborationRates){
       if(collaborationRates.sponsoredVideosFrom!==undefined && collaborationRates.sponsoredVideosFrom!=="") 
@@ -421,6 +429,3 @@ module.exports.getFilteredYoutubeInfluences=async(req,res)=>{
       res.status(500).json({ error: "Error fetching contact data" });
     }
   };
-  
-    
-    

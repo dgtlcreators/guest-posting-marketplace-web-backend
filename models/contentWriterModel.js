@@ -110,6 +110,7 @@ const ContentWriterSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  verifiedStatus: { type: Boolean, default: false },
   isBookmarked:{ type: Boolean, default: false },
   userId:{ type: mongoose.Schema.Types.ObjectId },
 }, { timestamps: true });

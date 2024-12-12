@@ -23,6 +23,7 @@ const adminFormDataSchema = new mongoose.Schema({
   monthlyTraffic: { type: String },
   mozSpamScore: { type: String },
   isBookmarked:{ type: Boolean, default: false },
+  verifiedStatus: { type: Boolean, default: false },
   userId:{ type: mongoose.Schema.Types.ObjectId },
 },{ timestamps: true });
 
