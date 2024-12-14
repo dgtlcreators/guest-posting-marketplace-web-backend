@@ -19,7 +19,7 @@ module.exports.getAllAdminData = async (req, res) => {
 module.exports.getOneAdminData = async (req, res) => {
   try {
     const id = req.params.id;
-    const userExist = await AdminData.findById(id);
+    const userExist = await AdminData.findById(id).select('-_id -userId -createdAt -updatedAt');
     if (!userExist) {
       return res
         .status(404)
@@ -31,11 +31,13 @@ module.exports.getOneAdminData = async (req, res) => {
   }
 };
 
+
 module.exports.getFilteredAdminData = async (req, res) => {
   try {
     const {
       mozDA,
       categories,
+      verifiedStatus,
       websiteLanguage,
       ahrefsDR,
       linkType,
@@ -69,7 +71,11 @@ module.exports.getFilteredAdminData = async (req, res) => {
     if (publisherEmail) filter.publisherEmail = publisherEmail;
     if (publisherPhoneNo) filter.publisherPhoneNo = publisherPhoneNo;
     if (userId) filter.userId=userId;
+    if(language) filter.language=language
 
+    if (verifiedStatus !== undefined && verifiedStatus !== "") {
+      filter.verifiedStatus = verifiedStatus === "verified" ? true : false;
+    }
     // Query the database with the constructed filter
     const users = await AdminData.find(filter);
 
@@ -80,19 +86,23 @@ module.exports.getFilteredAdminData = async (req, res) => {
         monthlyTraffic &&
         websiteLanguage &&
         linkType &&
-        mozSpamScore
+        mozSpamScore &&
+        verifiedStatus
       ) {
         const categoryFilter = { categories };
         const monthlyTrafficFilter = { monthlyTraffic };
         const languageFilter = { websiteLanguage };
         const linkTypeFilter = { linkType };
         const mozSpamScoreFilter = { mozSpamScore };
+        const verifiedStatusFilter = { verifiedStatus };
         const data = await AdminData.find({
           categoryFilter,
           monthlyTrafficFilter,
           languageFilter,
           linkTypeFilter,
           mozSpamScoreFilter,
+          verifiedStatusFilter
+
         });
         if (data.length) return res.json(data);
       }

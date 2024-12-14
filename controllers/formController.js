@@ -130,6 +130,7 @@ module.exports.getFilteredData = async (req, res) => {
     const {
       mozDA,
       categories,
+      verifiedStatus,
       websiteLanguage,
       ahrefsDR,
       linkType,
@@ -161,7 +162,9 @@ module.exports.getFilteredData = async (req, res) => {
       filter.monthlyTraffic = monthlyTraffic;
     if (mozSpamScore && mozSpamScore !== "allMozSpamScore")
       filter.mozSpamScore = mozSpamScore;
-    
+
+    if (verifiedStatus !== undefined && verifiedStatus !== "") filter.verifiedStatus = verifiedStatus;
+
      if (publisherURL)
        filter.publisherURL = publisherURL;
      if (publisherName)
@@ -170,8 +173,9 @@ module.exports.getFilteredData = async (req, res) => {
     // Query the database with the constructed filter
     const allusers=await AdminData.find();
    // console.log("All Users",allusers)
+
     const users = await AdminData.find(filter);
-   // console.log("filtered users",users)
+  
 
     // Check each filter condition sequentially
     if (!users.length) {

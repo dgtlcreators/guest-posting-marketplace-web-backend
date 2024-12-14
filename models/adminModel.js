@@ -8,6 +8,7 @@ const adminFormDataSchema = new mongoose.Schema({
       "Please fill a valid URL",
     ],
   },
+  verifiedStatus: { type: Boolean, required: true, default: false },
   publisherName: { type: String, trim: true },
   publisherEmail: {
     type: String,

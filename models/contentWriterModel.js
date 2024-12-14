@@ -74,11 +74,6 @@ const ContentWriterSchema = new mongoose.Schema({
   state: { type: String },
   city: { type: String },
 },
-  collaborationRates: {
-    post: { type: Number,  },
-    story: { type: Number, },
-    reel: { type: Number,  }
-  },
   email: {
     type: String,
     
@@ -92,25 +87,29 @@ const ContentWriterSchema = new mongoose.Schema({
     enum: ["Male", "Female", "Other", "Prefer not to say"], 
     default: "Prefer not to say" 
   },
-  /*industry: {
-    type: [SubCategoriesSchema],
-   
+  collaboration: {
+    hourlyRate: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+    perWordRate: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+    projectRate: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
   },
-  subCategories: {
-    type: [{SubCategoriesSchema}],  
-  },
-  industry: {
-    type: String,
-  },
-  subCategories: {
-    type: [SubCategoriesSchema],
-  },*/
   industry: [IndustrySchema],
   createdAt: {
     type: Date,
     default: Date.now
   },
-  verifiedStatus: { type: Boolean, default: false },
+  verifiedStatus: { type: Boolean, required: true, default: false },
   isBookmarked:{ type: Boolean, default: false },
   userId:{ type: mongoose.Schema.Types.ObjectId },
 }, { timestamps: true });
