@@ -48,8 +48,8 @@ module.exports.addInstagraminfluencer = async (req, res) => {
           const profilePictureFile = req.files['profilePicture'] ? req.files['profilePicture'][0] : null;
           const mediaKitFile = req.files['mediaKit'] ? req.files['mediaKit'][0] : null;
 
-          profilePictureUrl = profilePictureFile ? `/uploads/${profilePictureFile.filename}` : profilePictureUrl;
-          mediaKitUrl = mediaKitFile ? `/uploads/${mediaKitFile.filename}` : mediaKitUrl;
+          profilePictureUrl = profilePictureFile ? profilePictureFile.filename : profilePictureUrl;
+          mediaKitUrl = mediaKitFile ? mediaKitFile.filename : mediaKitUrl;
       }
 
    
@@ -101,8 +101,8 @@ module.exports.addInstagraminfluencer11 = async (req, res) => {
           const profilePictureFile = req.files['profilePicture'] ? req.files['profilePicture'][0] : null;
           const mediaKitFile = req.files['mediaKit'] ? req.files['mediaKit'][0] : null;
 
-          profilePictureUrl = profilePictureFile ? `/uploads/${profilePictureFile.filename}` : profilePictureUrl;
-          mediaKitUrl = mediaKitFile ? `/uploads/${mediaKitFile.filename}` : mediaKitUrl;
+          profilePictureUrl = profilePictureFile ? profilePictureFile.filename : profilePictureUrl;
+          mediaKitUrl = mediaKitFile ? mediaKitFile.filename : mediaKitUrl;
       }
 
       
@@ -165,8 +165,8 @@ console.log("req.files: ", req.files);
         const profilePictureFile = req.files['profilePicture'] ? req.files['profilePicture'][0] : null;
         const mediaKitFile = req.files['mediaKit'] ? req.files['mediaKit'][0] : null;
   
-        profilePictureUrl = profilePictureFile ? `/uploads/${profilePictureFile.filename}` : profilePictureUrl;
-        mediaKitUrl = mediaKitFile ? `/uploads/${mediaKitFile.filename}` : mediaKitUrl;
+        profilePictureUrl = profilePictureFile ? profilePictureFile.filename : profilePictureUrl;
+        mediaKitUrl = mediaKitFile ? mediaKitFile.filename : mediaKitUrl;
       }
   
       const instagramInfluencer = new InstagramInfluencer({
@@ -263,8 +263,8 @@ module.exports.updateInstagraminfluencer=async(req,res)=>{
       const profilePictureFile = req.files['profilePicture'] ? req.files['profilePicture'][0] : null;
       const mediaKitFile = req.files['mediaKit'] ? req.files['mediaKit'][0] : null;
 
-      profilePictureUrl = profilePictureFile ? `/uploads/${profilePictureFile.filename}` : profilePictureUrl;
-      mediaKitUrl = mediaKitFile ? `/uploads/${mediaKitFile.filename}` : mediaKitUrl;
+      profilePictureUrl = profilePictureFile ? profilePictureFile.filename : profilePictureUrl;
+      mediaKitUrl = mediaKitFile ? mediaKitFile.filename : mediaKitUrl;
     }
 
     let parsedLocation = {};

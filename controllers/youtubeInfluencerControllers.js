@@ -113,8 +113,8 @@ module.exports.updateYoutubeInfluencer1 = async (req, res) => {
           const profilePictureFile = req.files["profilePicture"] ? req.files["profilePicture"][0] : null;
           const mediaKitFile = req.files["mediaKit"] ? req.files["mediaKit"][0] : null;
 
-          profilePictureUrl = profilePictureFile ? `/uploads/${profilePictureFile.filename}` : profilePictureUrl;
-          mediaKitUrl = mediaKitFile ? `/uploads/${mediaKitFile.filename}` : mediaKitUrl;
+          profilePictureUrl = profilePictureFile ? `${profilePictureFile.filename}` : profilePictureUrl;
+          mediaKitUrl = mediaKitFile ? `${mediaKitFile.filename}` : mediaKitUrl;
       }
 
       const parsedPastCollaborations = Array.isArray(pastCollaborations) ? pastCollaborations : JSON.parse(pastCollaborations || '[]');
