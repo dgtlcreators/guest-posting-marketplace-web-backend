@@ -4,14 +4,14 @@ const bcryptjs=require("bcryptjs");
 const jwt=require("jsonwebtoken");
 const userActionModel = require("../models/UserInstagramInfluencer.js");
 const Activity = require('../models/activity.js');
-
-
 const crypto = require('crypto');
 
-
+require('dotenv').config();
+const fetch = require('node-fetch');
 
 const sendVerificationEmail = async (email, verificationToken) => {
-  const BREVO_API_KEY = process.env.REACT_APP_BREVO_API_KEY;
+  const key = process.env.BREVO_API_KEY;
+  console.log("key ",key);
   const frontendUrl = "https://guest-posting-marketplace-web-backend-mu57.onrender.com";
   
   const htmlContent = `
@@ -56,7 +56,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "api-key": BREVO_API_KEY,
+        "api-key": key,
       },
       body: JSON.stringify(requestBody),
     });
