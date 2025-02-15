@@ -47,7 +47,7 @@ module.exports.stateApi = async (req, res) => {
 module.exports.cityApi = async (req, res) => {
   
     const { countryCode, stateCode ,stateIsocode} = req.body;
-//console.log("countryCode, stateCode ,stateIsocode",countryCode, stateCode,stateIsocode)
+// console.log("countryCode, stateCode ,stateIsocode",countryCode, stateCode,stateIsocode)
 
     if (!countryCode || !stateCode) {
         return res.status(400).json({ error: "Country code and state code are required" });
