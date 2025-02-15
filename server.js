@@ -15,7 +15,7 @@ const cors = require('cors');
 require('dotenv').config();
 const path = require('path');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
-console.log(process.env.STRIPE_SECRET_KEY)
+
 
 
 const PDFDocument = require('pdfkit');
@@ -166,7 +166,7 @@ app.get("/verify", async (req, res) => {
     }
 });
 
-console.log("Mongodb Url ",process.env.MONGO_URI)
+
 
 app.use("/transaction",transactionRoute);
 
