@@ -43,7 +43,7 @@ connectDB();
 const allowedOrigins = [
   'https://guest-posting-marketplace.netlify.app',
   'https://guest-posting-marketplace-web.netlify.app',
-  'http://localhost:3000',
+  'http://localhost:3001',
   'http://connect.creatorsxchange.com',
   'https://connect.creatorsxchange.com'
 ];
